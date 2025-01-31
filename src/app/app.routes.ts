@@ -7,7 +7,7 @@ import { AboutComponent } from './about/about.component';
 import { AuthoriseComponent } from './authorise/authorise.component';
 
 export const routes: Routes = [
-    { path: '#', component: MainComponent },
+    { path: '', component: MainComponent },
     { path: 'flight_plan', component: MarchrouteComponent },
     { path: 'forum', component: ForumComponent },
     { path: 'login', component: LoginComponent },
