@@ -1,16 +1,16 @@
-<form>
+<form [formGroup]="loginForm"  (ngSubmit)="onSubmit(loginForm)">
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Почта</label>
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      <label for="InputEmail" class="form-label">Почта</label>
+      <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp" formControlName="email">
     </div>
     <div class="mb-3">
-      <label for="exampleInputPassword1" class="form-label">Пароль</label>
-      <input type="password" class="form-control" id="exampleInputPassword1">
+      <label for="InputPassword" class="form-label">Пароль</label>
+      <input type="password" class="form-control" id="InputPassword" formControlName="password">
     </div>
     <div class="mb-3 form-check">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-      <label class="form-check-label" for="exampleCheck1">Запомнить меня</label>
+      <input type="checkbox" class="form-check-input" id="Check" formControlName="remindme">
+      <label class="form-check-label" for="Check">Запомнить меня</label>
     </div>
-    <button type="submit" class="btn btn-primary me-3">Войти</button>
+    <button type="submit" class="btn btn-primary me-3" [disabled]="loginForm.invalid">Войти</button>
     <a class="btn btn-primary ms-3" href="authorise">Зарегистрироваться</a>
 </form>
