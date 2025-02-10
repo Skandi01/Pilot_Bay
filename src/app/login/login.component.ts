@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {FormGroup, FormControl, Validators } from '@angular/forms';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
+import { ApiService } from '../services/api/api.service';
+import { response } from 'express';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +20,21 @@ export class LoginComponent {
     remindme: new FormControl('')
   });
 
+  constructor(private apiService: ApiService){  }
+
   onSubmit(form: any){
-    console.warn(this.loginForm.value);
+    let users = this.apiService.getUsers().subscribe({
+      complete: () => {
+        console.log('Пользователь создан:', users);
+        // Здесь можно добавить логику для обработки успешного создания пользователя
+      },
+      error: () => {
+        console.error('Ошибка при создании пользователя:', error);
+        // Здесь можно добавить логику для обработки ошибок
+      }
+    }
+    );
+    //console.warn(this.loginForm.value);
+    //console.warn(users);
   }
 }
