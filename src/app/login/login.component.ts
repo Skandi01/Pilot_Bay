@@ -24,7 +24,7 @@ export class LoginComponent {
 
   onSubmit(form: any){
     let users = this.apiService.getUsers().subscribe({
-      complete: () => {
+      next: () => {
         console.log('Пользователь создан:', users);
         // Здесь можно добавить логику для обработки успешного создания пользователя
       },
