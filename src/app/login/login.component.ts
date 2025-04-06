@@ -23,13 +23,13 @@ export class LoginComponent {
   constructor(private apiService: ApiService){  }
 
   onSubmit(form: any){
-    let users = this.apiService.getUsers().subscribe({
-      next: () => {
-        console.log('Пользователь создан:', users);
+    this.apiService.getUsers().subscribe({
+      next: data => {
+        console.log('Пользователь создан:', data);
         // Здесь можно добавить логику для обработки успешного создания пользователя
       },
-      error: () => {
-        console.error('Ошибка при создании пользователя:', error);
+      error: err => {
+        console.error('Ошибка при создании пользователя', err.message);
         // Здесь можно добавить логику для обработки ошибок
       }
     }

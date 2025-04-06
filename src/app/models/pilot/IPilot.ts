@@ -4,5 +4,5 @@ interface IPilot{
     surname: String;
     patronymic: String;
     phone: number;
-    planeId: number
+    planeId?: number
 }

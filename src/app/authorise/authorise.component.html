@@ -1,9 +1,23 @@
-<div class="btn-group mb-3" role="group" aria-label="Radio toggle button group">
-    <input [(ngModel)]="radio" [value]="true" type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio1" autocomplete="off" [checked]="radio === true">
-    <label class="btn btn-outline-danger" for="vbtn-radio1">Пилот</label>
-    <input [(ngModel)]="radio" [value]="false" type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off" [checked]="radio === false">
-    <label class="btn btn-outline-danger" for="vbtn-radio2">Аэродром</label>
-</div>
-<p>{{radio}}</p>
-<app-auth-pilot *ngIf="radio === true"></app-auth-pilot>
-<app-auth-airfield *ngIf="radio === false"></app-auth-airfield>
+<form [formGroup]="authForm" (ngSubmit)="onSubmit(authForm)">
+    <div class="mb-3">
+      <label for="InputLogin" class="form-label">Никнейм</label>
+      <input type="text" class="form-control" id="InputLogin" formControlName="login">
+    </div>
+    <div class="mb-3">
+      <label for="InputPassword" class="form-label">Пароль</label>
+      <input type="password" class="form-control" id="InputPassword" formControlName="password">
+    </div>
+    <div class="btn-group mb-3" role="group" aria-label="Radio toggle button group">
+
+        <input value="option1" type="radio" class="btn-check" id="vbtn-radio1" autocomplete="off" formControlName="userType">
+        
+        <label class="btn btn-outline-danger" for="vbtn-radio1">Пилот</label>
+        
+        <input value="option2" type="radio" class="btn-check" id="vbtn-radio2" autocomplete="off" formControlName="userType">
+        
+        <label class="btn btn-outline-danger" for="vbtn-radio2">Аэродром</label>
+        
+    </div>
+        
+    <button type="submit" class="btn btn-primary" [disabled]="authForm.invalid">Зарегистрироваться</button>
+</form>
