@@ -25,7 +25,7 @@
                   <a class="nav-link" routerLink="profile" routerLinkActive="active">Профиль</a>
                 </li>
                 <li class="nav-item" *ngIf="isLogin === true">
-                  <a class="nav-link" routerLink="logout" routerLinkActive="active">Выйти</a>
+                  <app-logout></app-logout>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLink="about" routerLinkActive="active">Справка</a>

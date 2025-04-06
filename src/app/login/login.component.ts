@@ -15,7 +15,7 @@ import { response } from 'express';
 export class LoginComponent { 
   
   loginForm = new FormGroup({    
-    email: new FormControl('',[Validators.required,Validators.email,Validators.nullValidator]),    
+    login: new FormControl('',[Validators.required,Validators.nullValidator]),    
     password: new FormControl('',[Validators.required,Validators.nullValidator]),
     remindme: new FormControl('')
   });

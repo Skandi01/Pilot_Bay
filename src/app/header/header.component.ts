@@ -2,11 +2,14 @@ import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID } from '@angula
 import { RouterModule } from '@angular/router';
 import { isPlatformBrowser, NgIf } from '@angular/common';
 import { StorageService } from '../services/storage/storage.service';
+import { Injectable } from '@angular/core';
+import { LogoutComponent } from '../logout/logout.component';
+
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, NgIf],
+  imports: [RouterModule, NgIf, LogoutComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,9 +18,9 @@ export class HeaderComponent {
   isLogin: boolean = false;
   isPilot: boolean = false;
   isBrowser: boolean = false;
-  localStorage: any;
+  //localStorage: any;
 
-  constructor(private storageService: StorageService) {
+  constructor(private storageService: StorageService, @Inject(PLATFORM_ID) private platformId: Object) {
     //this.localStorage = localStorage;
   }
 
@@ -26,14 +29,15 @@ export class HeaderComponent {
   }
 
   checkUserType() {
-    //let test = localStorage.getItem('type');
-    const userId = localStorage.getItem('userId');
-    if(userId == null || userId == undefined){
-      this.isLogin = false;
-    } else this.isLogin = true;
-    const userType = localStorage.getItem('type');
-    if(userId === 'pilot'){
-      this.isPilot = true;
-    } else this.isPilot = false;
+    if (isPlatformBrowser(this.platformId)){
+      const userId = localStorage.getItem('userId');
+      if(userId == null || userId == undefined){
+        this.isLogin = false;
+      } else this.isLogin = true;
+      const userType = localStorage.getItem('type');
+      if(userId === 'pilot'){
+        this.isPilot = true;
+      } else this.isPilot = false;
+    }
   }
  }
