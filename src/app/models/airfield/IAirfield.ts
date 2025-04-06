@@ -1,4 +1,4 @@
-interface IAirfield{
+export interface IAirfield{
     userId: number;
     latitude: String;
     longitude: String;

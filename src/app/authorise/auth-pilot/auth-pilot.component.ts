@@ -37,14 +37,14 @@ export class AuthPilotComponent {
       id: 0
     };
 
-    let pilot: IPilot = {
+    /*let pilot: IPilot = {
       userId: 0,
       name: this.authForm.get('name')?.value,
       surname: this.authForm.get('surname')?.value,
       patronymic: this.authForm.get('patronymic')?.value,
       phone: this.authForm.get('phone')?.value,
       planeId: undefined
-    }
+    }*/
 
     let userCreated = false;
 
@@ -55,7 +55,7 @@ export class AuthPilotComponent {
           throw new Error('Ошибка при создании пользователя');
         else{
           console.log('Создан пользователь:', response.body);
-          pilot.userId = response.body.id;
+          //pilot.userId = response.body.id;
 
           /*Переход на главную страницу */
           this.router.navigate(['']);

@@ -22,7 +22,7 @@ export class AuthoriseComponent {
     this.authForm = new FormGroup({
       login: new FormControl('',[Validators.required,Validators.nullValidator]),    
       password: new FormControl('',[Validators.required,Validators.nullValidator,Validators.minLength(5)]),
-      userType: new FormControl('')
+      userType: new FormControl('option1')
     });
     //this.created = true;
   }
@@ -35,23 +35,30 @@ export class AuthoriseComponent {
           id: 0
         };
 
+    /*this.apiService.getUsers().subscribe({
+      next: (response: HttpResponse<IUser[]>) => {
+        console.log(response.body);
+      },
+      error: err => console.error(err)
+    });*/
+
     this.apiService.createUser(user).subscribe({  //создаём пользователя
           next: (response: HttpResponse<IUser>) => {
             if(response.status != HttpStatusCode.Created || response.body === null) 
-              throw new Error('Ошибка при создании пользователя');
+              throw new Error('1Ошибка при создании пользователя');
             else{
               console.log('Создан пользователь:', response.body);
 
               user.id = response.body.id;
     
-              /*Записать id и тип пользователя в localStorage */
+              //Записать id и тип пользователя в localStorage 
               this.storageService.setLocalItem("userId", user.id);
               let type: string = this.authForm.get('userType')?.value;
               if(type=='option1') this.storageService.setLocalItem("type", "pilot");
               else if(type=='option2') this.storageService.setLocalItem("type", "airfield");
               else throw new Error('Ошибка значения радио-кнопок');
-              
-              /*Переход на главную страницу */
+
+              //Переход на главную страницу
               this.router.navigate(['']);
             }
           },

@@ -1,4 +1,4 @@
-interface IPilot{
+export interface IPilot{
     userId: number;
     name: String;
     surname: String;
