@@ -6,6 +6,5 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   imports: [],
   template: `<p>forum works!</p>`,
   styleUrl: './forum.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ForumComponent { }

@@ -5,7 +5,12 @@
   "projects": {
     "Pilot_Bay": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {"@schematics/angular:component": {
+          "component": {
+            "changeDetection": "Default"
+          }
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",

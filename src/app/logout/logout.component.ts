@@ -8,7 +8,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   imports: [],
   template: `<button class="nav-link" routerLink="logout" routerLinkActive="active" (click)="openDialog()">Выйти</button>`,
   styleUrl: './logout.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LogoutComponent {
   constructor(private modalService: NgbModal) {}

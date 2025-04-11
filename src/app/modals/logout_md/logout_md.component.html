@@ -1,17 +1,21 @@
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          Вы уверены, что хотите выйти?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" (click)="confirm()">Save changes</button>
-        </div>
-      </div>
-    </div>
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Выход из профиля</h4>
+    <button
+        type="button"
+        class="btn-close"
+        aria-describedby="modal-title"
+        (click)="activeModal.dismiss('Cross click')"
+    ></button>
+</div>
+<div class="modal-body">
+    <p>
+        <strong>Вы уверены, что хотите <span class="text-primary">выйти</span> из своего профиля?</strong>
+    </p>
+    <p>
+        После выхода из профиля для продолжения работы будет необходима повторная авторизация.
+    </p>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss('cancel click')">Отмена</button>
+    <button type="button" class="btn btn-danger" (click)="confirm()">Подтвердить</button>
 </div>

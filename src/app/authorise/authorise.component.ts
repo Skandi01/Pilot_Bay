@@ -5,68 +5,90 @@ import { StorageService } from '../services/storage/storage.service';
 import { Router } from '@angular/router';
 import { HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { IUser } from '../models/IUser';
+import { DataService } from '../services/data/data.service';
+import { NgIf } from '@angular/common';
+import { ISessionUser } from '../models/ISessionUser';
 
 
 
 @Component({
   selector: 'app-authorise',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule],
+  imports: [ReactiveFormsModule, FormsModule, NgIf],
   templateUrl: './authorise.component.html',
-  styleUrl: './authorise.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './authorise.component.css'
 })
 export class AuthoriseComponent {
   authForm: FormGroup;
+  loginError: boolean;
   
-  constructor(private apiService: ApiService, private storageService: StorageService, private router: Router){
+  constructor(private apiService: ApiService, private storageService: StorageService, private router: Router, private dataService: DataService){
     this.authForm = new FormGroup({
-      login: new FormControl('',[Validators.required,Validators.nullValidator]),    
+      login: new FormControl('',[Validators.required,Validators.nullValidator,Validators.minLength(3)]),    
       password: new FormControl('',[Validators.required,Validators.nullValidator,Validators.minLength(5)]),
       userType: new FormControl('option1')
     });
-    //this.created = true;
+    this.loginError = false;
   }
 
   onSubmit(form: any){
 
     let user: IUser = {
-          login: this.authForm.get('login')?.value,
-          password: this.authForm.get('password')?.value,
-          id: 0
-        };
+      login: this.authForm.get('login')?.value,
+      password: this.authForm.get('password')?.value,
+      id: 0
+    };
 
-    /*this.apiService.getUsers().subscribe({
-      next: (response: HttpResponse<IUser[]>) => {
-        console.log(response.body);
-      },
-      error: err => console.error(err)
-    });*/
+    let userType = '';
+    let type: string = this.authForm.get('userType')?.value;
+    if(type=='option1'){
+      userType = 'pilot';
+    } 
+    else if(type=='option2') {
+      userType = 'airfield';
+    }
 
-    this.apiService.createUser(user).subscribe({  //создаём пользователя
-          next: (response: HttpResponse<IUser>) => {
-            if(response.status != HttpStatusCode.Created || response.body === null) 
-              throw new Error('1Ошибка при создании пользователя');
-            else{
-              console.log('Создан пользователь:', response.body);
+    this.apiService.createUserWithOption(user, userType).subscribe({  //создаём пользователя
+      next: (response: HttpResponse<ISessionUser>) => {
+        try{
+          if(response.status == HttpStatusCode.Ok && response.body == null) 
+            this.loginError = true;
+          else if(response.status == HttpStatusCode.Created && response.body != null){
+            this.loginError = false;
 
-              user.id = response.body.id;
-    
-              //Записать id и тип пользователя в localStorage 
-              this.storageService.setLocalItem("userId", user.id);
-              let type: string = this.authForm.get('userType')?.value;
-              if(type=='option1') this.storageService.setLocalItem("type", "pilot");
-              else if(type=='option2') this.storageService.setLocalItem("type", "airfield");
-              else throw new Error('Ошибка значения радио-кнопок');
+            console.log('Создан пользователь:', response.body);            
 
-              //Переход на главную страницу
-              this.router.navigate(['']);
-            }
-          },
-          error: err => {
-            console.error('Ошибка при создании пользователя', err);
+            this.dataService.setActiveUser(
+              response.body.userId, 
+              response.body.userType,
+              response.body.typeId
+            );
+            //Переход на главную страницу
+            this.router.navigate(['']);
+            
+            // легаси код по локальному хранилищу
+            /*
+            //Записать id и тип пользователя в localStorage 
+            this.storageService.setLocalItem("userId", user.id);
+            let type: string = this.authForm.get('userType')?.value;
+            if(type=='option1') this.storageService.setLocalItem("type", "pilot");
+            else if(type=='option2') this.storageService.setLocalItem("type", "airfield");
+            else throw new Error('Ошибка значения радио-кнопок');
+            */
           }
-        });
+        }
+        catch (error){
+          this.errorHandler(error);
+        }
+      },
+      error: err => {
+        console.error('Ошибка при создании пользователя', err);
+      }
+    });
+  }
+
+  errorHandler(error: any){
+    console.error('Ошибка при обработке создания пользователя:',error);
   }
 
  }

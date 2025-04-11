@@ -5,6 +5,7 @@ import { MarchrouteComponent } from './marchroute/marchroute.component';
 import { ForumComponent } from './forum/forum.component';
 import { AboutComponent } from './about/about.component';
 import { AuthoriseComponent } from './authorise/authorise.component';
+import { ProfileComponent } from './profiles/profile/profile.component';
 
 export const routes: Routes = [
     { path: '', component: MainComponent },
@@ -12,5 +13,6 @@ export const routes: Routes = [
     { path: 'forum', component: ForumComponent },
     { path: 'login', component: LoginComponent },
     { path: 'authorise', component: AuthoriseComponent },
+    { path: 'profile', component: ProfileComponent },
     { path: 'about', component: AboutComponent },
 ];

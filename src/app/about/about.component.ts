@@ -1,11 +1,17 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-about',
   standalone: true,
   imports: [],
-  template: `<p>about works!</p>`,
-  styleUrl: './about.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './about.component.html',
+  styleUrl: './about.component.css'
 })
-export class AboutComponent { }
+export class AboutComponent {
+  constructor(private router: Router){}
+
+  onClick(){
+    this.router.navigateByUrl("");
+  }
+ }

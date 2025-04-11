@@ -5,7 +5,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   standalone: true,
   imports: [],
   template: `<p>marchroute works!</p>`,
-  styleUrl: './marchroute.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './marchroute.component.css'
 })
 export class MarchrouteComponent { }

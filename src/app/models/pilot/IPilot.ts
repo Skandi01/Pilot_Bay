@@ -1,8 +1,7 @@
 export interface IPilot{
+    id: number;
     userId: number;
     name: String;
-    surname: String;
-    patronymic: String;
     phone: number;
     planeId?: number
 }
