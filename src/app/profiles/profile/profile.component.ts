@@ -18,6 +18,7 @@ import { forkJoin } from 'rxjs';
 })
 export class ProfileComponent {
   profileForm: FormGroup;
+  formData: FormData;
 
   isEditing: boolean;
   isInited: boolean;
@@ -43,6 +44,8 @@ export class ProfileComponent {
       userType: '',
       typeId: -1
     }
+
+    this.formData = this.profileForm.value; //инициализация
   }
 
   ngOnInit(){
@@ -58,11 +61,6 @@ export class ProfileComponent {
       error: () => console.log('Ошибка observable'),
       complete: () => console.log('Завершён observable')
     });
-
-    this.profileForm.patchValue({
-      fio: 'Тест',
-      phone: '123'
-    });
     
     if(this.activeUser.userId != -1) this.loadData();
     console.log('Инит:', this.profileForm.value);
@@ -76,8 +74,8 @@ export class ProfileComponent {
         let pilot: IPilot;
         if(pilotResponse.body != null){
           pilot = pilotResponse.body;
-          let name = (pilot.name == null)?'':pilot.name;
-          let phone = (pilot.phone == null)?'':pilot.phone;
+          //let name = (pilot.name == null)?'':pilot.name;
+          //let phone = (pilot.phone == null)?'':pilot.phone;
           this.profileForm.patchValue({
             fio: (pilot.name == null)?'':pilot.name,
             phone: (pilot.phone == null)?'':pilot.phone
@@ -92,9 +90,9 @@ export class ProfileComponent {
         }
         if(planeResponse.body != null){
           let plane = planeResponse.body;
-          let model = (plane.model == null)?'':plane.model;
-          let fuelId = (plane.fuelId == null)?'':plane.fuelId;
-          let fuelConsumption = (plane.fuelConsumption == null)?'':plane.fuelConsumption;
+          //let model = (plane.model == null)?'':plane.model;
+          //let fuelId = (plane.fuelId == null)?'':plane.fuelId;
+          //let fuelConsumption = (plane.fuelConsumption == null)?'':plane.fuelConsumption;
           this.profileForm.patchValue({
             aircraft: (plane.model == null)?'':plane.model,
             fuelType: (plane.fuelId == null)?'':plane.fuelId,
@@ -104,6 +102,7 @@ export class ProfileComponent {
           console.log('Самолёт заполнен запросом');
           //this.cdr.detectChanges();
           console.log(this.profileForm.value);
+          this.formData = this.profileForm.value; //сохраняем бекап формы
           this.planeLoaded = true;
         }
       }
@@ -112,18 +111,27 @@ export class ProfileComponent {
 
   onSubmit(){
     //this.isEditing = true;
-    this.cdr.detectChanges();
-    this.setFieldsEnable();
+    this.setFieldsEnable(); //делаем поля активными
     console.log(this.profileForm.value);
+    
   }
 
   onSave(){
     //this.isEditing = false;
-    this.setFieldsDisable();
-    this.cdr.detectChanges();
+    this.setFieldsDisable();  //дизейблим поля
+    let IPilot pilot = {
+      id: this.activeUser.typeId,
+      userId: this.activeUser.userId,
+      name: this.profileForm.get('name')?.value,
+      phone: this.profileForm.get('name')?.value,
+      plane //переместить самолёт в сущность пилота или возвращать сразу данные пилота и самолёта в одной json строке
+    }
+    this.apiService.updatePilot();//отправляем запрос на обновление пилота
+    //вызываем loadData для обновления полей и сохранения значений в переменной
   }
   onCancel(){
-
+    this.profileForm.setValue(this.formData); //возвращаем старые значения полей
+    this.setFieldsDisable();  //дизейблим поля
   }
 
   setFieldsEnable(){
