@@ -38,6 +38,22 @@
               <label for="InputFuelType" class="form-label text-danger" *ngIf="profileForm.get('fuelType')?.errors?.['required']">Обязательное поле</label>
             </div>
         </div>
+        <div class="dropdown mb-3">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="fuelType"
+            id="dropdownInput"
+            placeholder="Выберите марку топлива"
+            readonly
+            (click)="toggleDropdown()"
+          />
+          <ul class="dropdown-menu" *ngIf="isDropdownOpen">
+            <li *ngFor="let option of options">
+              <a class="dropdown-item" (click)="selectOption(option.name)">{{ option.name }}</a>
+            </li>
+          </ul>
+        </div>
         <div class="mb-3">
             <label for="InputConsumption" class="form-label">Расход</label>
             <input type="text" class="form-control" id="InputConsumption" formControlName="consumption" placeholder="л/ч">

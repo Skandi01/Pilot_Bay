@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DataService } from '../../services/data/data.service';
@@ -8,11 +8,12 @@ import { IPilot } from '../../models/pilot/IPilot';
 import { HttpResponse } from '@angular/common/http';
 import { IPlane } from '../../models/pilot/IPlane';
 import { forkJoin } from 'rxjs';
+import { IFuel } from '../../models/airfield/IFuel';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, NgIf],
+  imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
@@ -23,6 +24,9 @@ export class ProfileComponent {
   isEditing: boolean;
   isInited: boolean;
   activeUser: ISessionUser;
+  planeId: number;
+  isDropdownOpen: boolean;
+  options: IFuel[];
   pilotLoaded: boolean;
   planeLoaded: boolean;
 
@@ -44,6 +48,9 @@ export class ProfileComponent {
       userType: '',
       typeId: -1
     }
+    this.planeId = 0;
+    this.isDropdownOpen = false;
+    this.options = [];
 
     this.formData = this.profileForm.value; //инициализация
   }
@@ -104,6 +111,15 @@ export class ProfileComponent {
           console.log(this.profileForm.value);
           this.formData = this.profileForm.value; //сохраняем бекап формы
           this.planeLoaded = true;
+          this.planeId = plane.id;
+        }
+      }
+    });
+
+    this.apiService.getFuelTypes().subscribe({
+      next: (response) => {
+        if(response.body != null){
+          this.options = response.body; //заполняем дропдаун марками топлива с сервера
         }
       }
     });
@@ -118,17 +134,38 @@ export class ProfileComponent {
 
   onSave(){
     //this.isEditing = false;
+    /*if(this.profileForm.touched){ // проверка на редактирование полец
+
+    }*/
+
+
     this.setFieldsDisable();  //дизейблим поля
-    let IPilot pilot = {
+    
+    let pilot: IPilot = {
       id: this.activeUser.typeId,
       userId: this.activeUser.userId,
       name: this.profileForm.get('name')?.value,
       phone: this.profileForm.get('name')?.value,
-      plane //переместить самолёт в сущность пилота или возвращать сразу данные пилота и самолёта в одной json строке
+      planeId: this.planeId
     }
-    this.apiService.updatePilot();//отправляем запрос на обновление пилота
-    //вызываем loadData для обновления полей и сохранения значений в переменной
+    let plane: IPlane = {
+      id: this.planeId,
+      model: this.profileForm.get('aircraft')?.value,
+      fuelId: this.getFuelIdByName(this.profileForm.get('fuelType')?.value),
+      fuelConsumption: this.profileForm.get('consumption')?.value
+    }
+    const updatePilot = this.apiService.updatePilot(pilot); //отправляем запрос на обновление пилота
+    const updatePlane = this.apiService.updatePlane(plane); //отправляем запрос на обновление самолёта
+
+    forkJoin([updatePilot,updatePlane]).subscribe({
+      next: ([pilotResponse, planeResponse]) => {
+        // действия после отправки данных
+      }
+    });
+
+    this.formData = this.profileForm.value; //обновляем бекап полей без повторной отправки запросов
   }
+
   onCancel(){
     this.profileForm.setValue(this.formData); //возвращаем старые значения полей
     this.setFieldsDisable();  //дизейблим поля
@@ -147,5 +184,21 @@ export class ProfileComponent {
     this.profileForm.get('aircraft')?.disable();
     this.profileForm.get('fuelType')?.disable();
     this.profileForm.get('consumption')?.disable();
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+  
+  selectOption(option: string) {
+    this.profileForm.get('selectedOption')?.setValue(option);
+    this.isDropdownOpen = false;
+  }
+
+  getFuelIdByName(name: string){
+    for(const fuel of this.options){
+      if(fuel.name.includes(name)) return fuel.id;
+    }
+    return 0;
   }
 }
