@@ -5,5 +5,5 @@
  */
 export interface IFuel{
     id: number;
-    name: string;
+    type: string;
 }

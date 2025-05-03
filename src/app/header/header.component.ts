@@ -35,29 +35,30 @@ export class HeaderComponent {
 
   ngOnInit(){
     //this.checkUserType();
-     
-    this.dataService.data$.subscribe({
-      next: (userStr) => {
-        console.log('Инит хедера выполнен');
-        this.activeUser = JSON.parse(userStr);
-        if(this.activeUser.userType == '' && this.activeUser.userId == -1){
-          this.isLogin = false;
-          this.isPilot = false;
+    if(!this.isLogin){
+      this.dataService.data$.subscribe({
+        next: (userStr) => {
+          console.log('Инит хедера выполнен');
+          this.activeUser = JSON.parse(userStr);
+          if(this.activeUser.userType == '' && this.activeUser.userId == -1){
+            this.isLogin = false;
+            this.isPilot = false;
+          }
+          else if(this.activeUser.userType == 'pilot'){
+            this.isLogin = true;
+            this.isPilot = true;
+          }
+          else if(this.activeUser.userType == 'admin'){
+            this.isLogin = true;
+            this.isAdmin = true;
+          }
+          else if(this.activeUser.userType == 'airfield'){
+            this.isLogin = true;
+            this.isAirfield = true;
+          }
         }
-        else if(this.activeUser.userType == 'pilot'){
-          this.isLogin = true;
-          this.isPilot = true;
-        }
-        else if(this.activeUser.userType == 'admin'){
-          this.isLogin = true;
-          this.isAdmin = true;
-        }
-        else if(this.activeUser.userType == 'airfield'){
-          this.isLogin = true;
-          this.isAirfield = true;
-        }
-      }
-    });
+      });
+    }
   }
 
   openLogoutDialog() {

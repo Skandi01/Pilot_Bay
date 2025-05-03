@@ -1,6 +1,7 @@
 <div class="container mt-5">
     <h1 class="text-center">Профиль</h1>
     <form [formGroup]="profileForm" class="p-3">
+
         <div class="mb-3">
             <div class="mb-3">
                 <label for="InputFio" class="form-label">ФИО</label>
@@ -17,7 +18,7 @@
           
                 <div *ngIf="profileForm.get('phone')?.invalid && (profileForm.get('phone')?.touched || profileForm.get('phone')?.dirty)">
                   <label for="InputPhone" class="form-label text-danger" *ngIf="profileForm.get('phone')?.errors?.['required']">Обязательное поле</label>
-                  <label for="InputPhone" class="form-label text-danger" *ngIf="profileForm.get('phone')?.errors?.['pattern']">Минимум 5 символов</label>
+                  <label for="InputPhone" class="form-label text-danger" *ngIf="profileForm.get('phone')?.errors?.['minlength']">Минимум 11 цифр</label>
                 </div>
             </div>
         </div>
@@ -30,30 +31,18 @@
               <label for="InputAircraft" class="form-label text-danger" *ngIf="profileForm.get('aircraft')?.errors?.['required']">Обязательное поле</label>
             </div>
         </div>
+
         <div class="mb-3">
-            <label for="InputFuelType" class="form-label">Марка топлива</label>
-            <input type="text" class="form-control" id="InputFuelType" formControlName="fuelType">
+          <label for="SelectFuel" class="form-label">Тип топлива</label>
+          <select class="form-select" id="SelectFuel" aria-label="Default select example" formControlName="fuelType">
+            <option *ngFor="let fuel of options" value="{{fuel.id}}">{{fuel.type}}</option>
+          </select>
       
-            <div *ngIf="profileForm.get('fuelType')?.invalid && (profileForm.get('fuelType')?.touched || profileForm.get('fuelType')?.dirty)">
+            <div *ngIf="profileForm.get('fuelType')?.invalid">
               <label for="InputFuelType" class="form-label text-danger" *ngIf="profileForm.get('fuelType')?.errors?.['required']">Обязательное поле</label>
             </div>
         </div>
-        <div class="dropdown mb-3">
-          <input
-            type="text"
-            class="form-control"
-            formControlName="fuelType"
-            id="dropdownInput"
-            placeholder="Выберите марку топлива"
-            readonly
-            (click)="toggleDropdown()"
-          />
-          <ul class="dropdown-menu" *ngIf="isDropdownOpen">
-            <li *ngFor="let option of options">
-              <a class="dropdown-item" (click)="selectOption(option.name)">{{ option.name }}</a>
-            </li>
-          </ul>
-        </div>
+        
         <div class="mb-3">
             <label for="InputConsumption" class="form-label">Расход</label>
             <input type="text" class="form-control" id="InputConsumption" formControlName="consumption" placeholder="л/ч">
@@ -63,14 +52,14 @@
             </div>
         </div>
             
-        <div class="mb-3">
+        <div class="mb-3" *ngIf="!isEditing" >
           <button class="btn btn-primary" (click)="onSubmit()">Редактировать</button>
         </div>
         <div class="mb-3">
-            <button class="btn btn-primary"  (click)="onSave()">Сохранить</button>
+            <button class="btn btn-primary" [disabled]="profileForm.invalid" (click)="onSave()">Сохранить</button>
         </div>
-        <div class="mb-3">
-            <button class="btn btn-primary" [disabled]="profileForm.invalid" (click)="onCancel()">Отмена</button>
+        <div class="mb-3" *ngIf="isEditing" >
+            <button class="btn btn-primary" (click)="onCancel()">Отмена</button>
         </div>
         
     </form>

@@ -33,7 +33,7 @@ export class ProfileComponent {
   constructor(private cdr: ChangeDetectorRef, private dataService: DataService, private apiService: ApiService){
     this.profileForm = new FormGroup({
       fio: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator,Validators.minLength(3)]),    
-      phone: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator,Validators.pattern('\d{10}')]),
+      phone: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator,Validators.minLength(11)/*Validators.pattern('\d{11}')*/]),
       aircraft: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),
       fuelType: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),
       consumption: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator])
@@ -126,7 +126,7 @@ export class ProfileComponent {
   }
 
   onSubmit(){
-    //this.isEditing = true;
+    this.isEditing = true;
     this.setFieldsEnable(); //делаем поля активными
     console.log(this.profileForm.value);
     
@@ -144,14 +144,14 @@ export class ProfileComponent {
     let pilot: IPilot = {
       id: this.activeUser.typeId,
       userId: this.activeUser.userId,
-      name: this.profileForm.get('name')?.value,
-      phone: this.profileForm.get('name')?.value,
+      name: this.profileForm.get('fio')?.value,
+      phone: this.profileForm.get('phone')?.value,
       planeId: this.planeId
     }
     let plane: IPlane = {
       id: this.planeId,
       model: this.profileForm.get('aircraft')?.value,
-      fuelId: this.getFuelIdByName(this.profileForm.get('fuelType')?.value),
+      fuelId: this.profileForm.get('fuelType')?.value,
       fuelConsumption: this.profileForm.get('consumption')?.value
     }
     const updatePilot = this.apiService.updatePilot(pilot); //отправляем запрос на обновление пилота
@@ -164,10 +164,12 @@ export class ProfileComponent {
     });
 
     this.formData = this.profileForm.value; //обновляем бекап полей без повторной отправки запросов
+    this.isEditing = false;
   }
 
   onCancel(){
     this.profileForm.setValue(this.formData); //возвращаем старые значения полей
+    this.isEditing = false;
     this.setFieldsDisable();  //дизейблим поля
   }
 
@@ -197,8 +199,14 @@ export class ProfileComponent {
 
   getFuelIdByName(name: string){
     for(const fuel of this.options){
-      if(fuel.name.includes(name)) return fuel.id;
+      if(fuel.type.includes(name)) return fuel.id;
     }
     return 0;
+  }
+  getFuelNameById(id: number){
+    for(const fuel of this.options){
+      if(fuel.id == id) return fuel.type;
+    }
+    return "";
   }
 }
