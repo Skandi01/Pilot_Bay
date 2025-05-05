@@ -21,11 +21,11 @@
                 <li class="nav-item" *ngIf="!isLogin">
                     <a class="nav-link" routerLink="login" routerLinkActive="active">Войти</a>
                 </li>
-                <li class="nav-item" *ngIf="isLogin && isAirfield">
-                  <a class="nav-link" routerLink="profileAir" routerLinkActive="active">Профиль</a>
-                </li>
-                <li class="nav-item" *ngIf="isLogin && isPilot">
+                <li class="nav-item" *ngIf="isLogin && !isAdmin">
                   <a class="nav-link" routerLink="profile" routerLinkActive="active">Профиль</a>
+                </li>
+                <li class="nav-item" *ngIf="isLogin && isAdmin">
+                  <a class="nav-link" routerLink="administration" routerLinkActive="active">Администрирование</a>
                 </li>
                 <li class="nav-item" *ngIf="isLogin">
                   <button class="nav-link" routerLinkActive="active" (click)="openLogoutDialog()">Выйти</button>

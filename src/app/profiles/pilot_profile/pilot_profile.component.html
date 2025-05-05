@@ -1,0 +1,63 @@
+<form [formGroup]="profileForm" class="p-3">
+
+    <div class="mb-3">
+        <div class="mb-3">
+            <label for="InputFio" class="form-label">ФИО</label>
+            <input type="text" class="form-control" id="InputFio" formControlName="fio">
+      
+            <div *ngIf="profileForm.get('fio')?.invalid && (profileForm.get('fio')?.touched || profileForm.get('fio')?.dirty)">
+              <label for="InputFio" class="form-label text-danger" *ngIf="profileForm.get('fio')?.errors?.['required']">Обязательное поле</label>
+              <label for="InputFio" class="form-label text-danger" *ngIf="profileForm.get('fio')?.errors?.['minlength']">Минимум 3 символа</label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="InputPhone" class="form-label">Телефон</label>
+            <input type="text" class="form-control" id="InputPhone" formControlName="phone">
+      
+            <div *ngIf="profileForm.get('phone')?.invalid && (profileForm.get('phone')?.touched || profileForm.get('phone')?.dirty)">
+              <label for="InputPhone" class="form-label text-danger" *ngIf="profileForm.get('phone')?.errors?.['required']">Обязательное поле</label>
+              <label for="InputPhone" class="form-label text-danger" *ngIf="profileForm.get('phone')?.errors?.['minlength']">Минимум 11 цифр</label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mb-3">
+        <label for="InputAircraft" class="form-label">Модель самолёта</label>
+        <input type="text" class="form-control" id="InputAircraft" formControlName="aircraft">
+  
+        <div *ngIf="profileForm.get('aircraft')?.invalid && (profileForm.get('aircraft')?.touched || profileForm.get('aircraft')?.dirty)">
+          <label for="InputAircraft" class="form-label text-danger" *ngIf="profileForm.get('aircraft')?.errors?.['required']">Обязательное поле</label>
+        </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="SelectFuel" class="form-label">Тип топлива</label>
+      <select class="form-select" id="SelectFuel" formControlName="fuelType">
+        <option *ngFor="let fuel of options" value="{{fuel.id}}">{{fuel.type}}</option>
+      </select>
+  
+        <div *ngIf="profileForm.get('fuelType')?.invalid">
+          <label for="InputFuelType" class="form-label text-danger" *ngIf="profileForm.get('fuelType')?.errors?.['required']">Обязательное поле</label>
+        </div>
+    </div>
+    
+    <div class="mb-3">
+        <label for="InputConsumption" class="form-label">Расход</label>
+        <input type="text" class="form-control" id="InputConsumption" formControlName="consumption" placeholder="л/ч">
+  
+        <div *ngIf="profileForm.get('consumption')?.invalid && (profileForm.get('consumption')?.touched || profileForm.get('consumption')?.dirty)">
+          <label for="InputConsumption" class="form-label text-danger" *ngIf="profileForm.get('consumption')?.errors?.['required']">Обязательное поле</label>
+        </div>
+    </div>
+        
+    <div class="mb-3" *ngIf="!isEditing" >
+      <button class="btn btn-primary" (click)="onSubmit()">Редактировать</button>
+    </div>
+    <div class="mb-3" *ngIf="isEditing">
+        <button class="btn btn-primary" [disabled]="profileForm.invalid" (click)="onSave()">Сохранить</button>
+    </div>
+    <div class="mb-3" *ngIf="isEditing" >
+        <button class="btn btn-primary" (click)="onCancel()">Отмена</button>
+    </div>
+    
+</form>

@@ -126,9 +126,34 @@ export class ApiService {
     );
   }
 
+  getAirfield(airfieldId: number): Observable<HttpResponse<IAirfield>> {
+    return this.http.get<IAirfield>(
+      `${this.apiUrl}/airfield/get/${airfieldId}`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
   createAirfield(airfield: IAirfield): Observable<HttpResponse<IAirfield>> {
     return this.http.post<IAirfield>(
       `${this.apiUrl}/airfield/create`,
+      airfield,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  updateAirfield(airfield: IAirfield): Observable<HttpResponse<IAirfield>> {
+    return this.http.post<IAirfield>(
+      `${this.apiUrl}/airfield/update/${airfield.id}`,
       airfield,
       {
         headers: new HttpHeaders({
@@ -190,7 +215,7 @@ export class ApiService {
 
   updatePlane(plane: IPlane): Observable<HttpResponse<IPlane>> {
     return this.http.post<IPlane>(
-      `${this.apiUrl}/plane/create`,
+      `${this.apiUrl}/plane/update/${plane.id}`,
       plane,
       {
         headers: new HttpHeaders({
