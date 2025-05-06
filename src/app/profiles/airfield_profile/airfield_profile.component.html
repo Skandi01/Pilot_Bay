@@ -29,25 +29,38 @@
       </div>
     </div>
 
-    <div class="mb-3">
+    <div class="mb-3" [formGroup]="fuelForm">
       <label class="form-label">Типы топлива в наличии</label>
-      <div formArrayName="checkboxes">
-        <div class="form-check" *ngFor="let checkbox of options; let i = index">
-          <label>
-            <input type="checkbox" formControlName="i" />
-            Option {{ i + 1 }}
-          </label>
-            <input class="form-check-input" type="checkbox" value="" id="checkDefault{{i}}" formControlName="i">
-            <label class="form-check-label" for="checkDefault{{i}}">
-                {{checkbox.type}}
-            </label>
 
-        </div>
-      </div>
-  
-        <div *ngIf="profileForm.get('fuelType')?.invalid">
-          <label for="InputFuelType" class="form-label text-danger" *ngIf="profileForm.get('fuelType')?.errors?.['required']">Обязательное поле</label>
-        </div>
+      <select formControlName="type" class="form-select">
+        <option value="" disabled selected>Выберите тип топлива</option>
+        <option *ngFor="let fuel of fuels" [value]="fuel.id">{{ fuel.type }}</option>
+      </select>
+
+      <label for="InputPrice" class="form-label" placeholder="р/л">Цена за литр</label>
+      <input type="text" class="form-control" id="InputPrice" formControlName="price">
+      
+      <button class="btn btn-primary" (click)="addFuel()" [disabled]="fuelForm.invalid">Добавить</button>
+
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Топливо</th>
+            <th scope="col">Цена</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="checkboxes">
+          <tr *ngFor="let airfuel of airfuels; let i = index">
+            <th>
+              <button class="btn btn-danger" (click)="deleteFuel(i)">Удалить</button>
+            </th>
+            <td>{{airfuel.type}}</td>
+            <td>{{airfuel.price}}</td>
+          </tr>
+        </tbody>
+      </table>
+
     </div>
         
     <div class="mb-3" *ngIf="!isEditing" >

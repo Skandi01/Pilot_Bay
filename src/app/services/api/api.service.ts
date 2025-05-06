@@ -7,6 +7,7 @@ import { ISessionUser } from '../../models/ISessionUser';
 import { IAirfield } from '../../models/airfield/IAirfield';
 import { IPlane } from '../../models/pilot/IPlane';
 import { IFuel } from '../../models/airfield/IFuel';
+import { IAirfieldFuelType } from '../../models/airfield/IAirfieldFuelType';
 
 @Injectable({
   providedIn: 'root'
@@ -229,6 +230,18 @@ export class ApiService {
   getFuelTypes(): Observable<HttpResponse<IFuel[]>> {
     return this.http.get<IFuel[]>(
       `${this.apiUrl}/fuel/getAll`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  getFuelTypesByAirfield(airfieldId: number): Observable<HttpResponse<IAirfieldFuelType[]>>{
+    return this.http.get<IAirfieldFuelType[]>(
+      `${this.apiUrl}/fuel/getFuelTypesByAirfieldId/${airfieldId}`,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
