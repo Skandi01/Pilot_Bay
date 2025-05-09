@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {IUser} from '../../models/IUser';
 import {IPilot} from '../../models/pilot/IPilot';
@@ -154,7 +154,7 @@ export class ApiService {
 
   updateAirfield(airfield: IAirfield): Observable<HttpResponse<IAirfield>> {
     return this.http.post<IAirfield>(
-      `${this.apiUrl}/airfield/update/${airfield.id}`,
+      `${this.apiUrl}/airfield/update`,
       airfield,
       {
         headers: new HttpHeaders({
@@ -239,9 +239,47 @@ export class ApiService {
     );
   }
 
-  getFuelTypesByAirfield(airfieldId: number): Observable<HttpResponse<IAirfieldFuelType[]>>{
+  /*getFuelTypesByAirfield(airfieldId: number): Observable<HttpResponse<IAirfieldFuelType[]>>{
     return this.http.get<IAirfieldFuelType[]>(
       `${this.apiUrl}/fuel/getFuelTypesByAirfieldId/${airfieldId}`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }*/
+
+  getAirfuelsByAirfieldId(airfieldId: number): Observable<HttpResponse<IAirfieldFuelType[]>>{
+    return this.http.get<IAirfieldFuelType[]>(
+      `${this.apiUrl}/fuel/getAirfuelsByAirfieldId/${airfieldId}`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  addNewAirfuels(airfuels: IAirfieldFuelType[]): Observable<HttpResponse<HttpStatusCode>>{
+    return this.http.post<HttpStatusCode>(
+      `${this.apiUrl}/fuel/addNewAirfuels`,
+      airfuels,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  deleteAirfuels(airfuelIds: number[]): Observable<HttpResponse<HttpStatusCode>>{
+    return this.http.post<HttpStatusCode>(
+      `${this.apiUrl}/fuel/deleteAirfuels`,
+      airfuelIds,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'

@@ -1,12 +1,9 @@
 import { NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DataService } from '../../services/data/data.service';
 import { ISessionUser } from '../../models/ISessionUser';
 import { ApiService } from '../../services/api/api.service';
-import { IPilot } from '../../models/pilot/IPilot';
-import { HttpResponse } from '@angular/common/http';
-import { IPlane } from '../../models/pilot/IPlane';
 import { forkJoin } from 'rxjs';
 import { IFuel } from '../../models/airfield/IFuel';
 import { IAirfield } from '../../models/airfield/IAirfield';
@@ -28,9 +25,11 @@ export class AirfieldProfileComponent {
   isInited: boolean;
   activeUser: ISessionUser;
   airfuels: IAirfieldFuelType[];
+  airfuels_backup: IAirfieldFuelType[];
+  airfuelIds_deleted: number[];
   fuels: IFuel[];
 
-  constructor(private cdr: ChangeDetectorRef, private dataService: DataService, private apiService: ApiService, private fb: FormBuilder){
+  constructor(private dataService: DataService, private apiService: ApiService){
     this.profileForm = new FormGroup({
       latitude: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),    
       longtitude: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),
@@ -50,6 +49,8 @@ export class AirfieldProfileComponent {
       typeId: -1
     }
     this.airfuels = [];
+    this.airfuels_backup = [];
+    this.airfuelIds_deleted = [];
     this.fuels = [];
 
     this.formData = this.profileForm.value; //инициализация
@@ -90,7 +91,7 @@ export class AirfieldProfileComponent {
       }
     });
 
-    this.apiService.getFuelTypesByAirfield(this.activeUser.typeId).subscribe({
+    this.apiService.getAirfuelsByAirfieldId(this.activeUser.typeId).subscribe({
       next: (response) => {
         if(response.body != null){
           this.airfuels = response.body; //заполняем таблицу типами топлива, связанными с аэродромом
@@ -114,23 +115,40 @@ export class AirfieldProfileComponent {
   }
 
   addFuel(){
-    this.airfuels.push({
-      id: -1,
-      
-    })
-    this.fuelForm.get('fuel')?.value;
-    this.fuelForm.get('price')?.value;
+    let fuel: number = this.fuelForm.get('fuel')?.value;
+    console.log('addFuel: fuel:',fuel);
+    if(this.airfuels.filter(af => {return af.fuelId == fuel}).length == 0){
+      this.airfuels.push({
+        id: undefined,
+        airfieldId: this.activeUser.typeId,
+        fuelId: fuel,
+        price: this.fuelForm.get('price')?.value
+      });
+      this.fuelForm.patchValue({  //обнуляем поля выбора топлива и цены
+        fuel:'',
+        price:''
+      });
+    }
+    else{
+
+    }
   }
 
   deleteFuel(i: number){
-    this.airfuels.splice(i);
+    console.log('deleteFuel:',i);
+    let afId = this.airfuels.findIndex(af => {return af.fuelId == i});
+    this.airfuelIds_deleted.push(
+      this.airfuels[afId].id!
+    );
+    this.airfuels.splice(afId,1);
+    console.log('deleteFuel: airfuelIds_deleted: ',this.airfuelIds_deleted);
   }
 
   onSubmit(){
     this.isEditing = true;
     this.setFieldsEnable(); //делаем поля активными
     console.log(this.profileForm.value);
-    
+    this.airfuels_backup = this.airfuels; //делаем бекап значений таблицы
   }
 
   onSave(){
@@ -146,25 +164,59 @@ export class AirfieldProfileComponent {
       id: this.activeUser.typeId,
       userId: this.activeUser.userId,
       latitude: this.profileForm.get('latitude')?.value,
-      longitude: this.profileForm.get('longitude')?.value,
+      longitude: this.profileForm.get('longtitude')?.value,
       code: this.profileForm.get('code')?.value
     }
-    const updateAirfield = this.apiService.updateAirfield(airfield); //отправляем запрос на обновление аэродрома
-    const updateAirFuels = this.apiService.updateAirFuels(this.airfuels); //отправляем запрос на обновление типов топлива в наличии
 
-    forkJoin([updateAirfield,updateAirFuels]).subscribe({
-      next: () => {
-        // действия после отправки данных
+    console.log('Save: airfield:',airfield);
+
+    const updateAirfield = this.apiService.updateAirfield(airfield); //отправляем запрос на обновление аэродрома
+    updateAirfield.subscribe({
+      next: (airfieldResponse) => {
+
       }
     });
 
+    let newAirfuels: IAirfieldFuelType[] = this.airfuels.filter(airfuel => {return airfuel.id == undefined}); //отделяем добавленные типы топлива
+
+    console.log('Save: airfuels:',this.airfuels);
+    console.log('Save: newAirfuels:',newAirfuels);
+
+    if(newAirfuels.length > 0) {  //отправляем запрос на обновление типов топлива в наличии
+      this.apiService.addNewAirfuels(newAirfuels).subscribe({
+        next: (airfuelResponse) => {
+
+        }
+      }); 
+    }
+
+    console.log('Save: airfuelIds_deleted:',this.airfuelIds_deleted);
+
+    if(this.airfuelIds_deleted.length > 0){ //удаляем удалённые из таблицы типы топлива
+      this.apiService.deleteAirfuels(this.airfuelIds_deleted.filter(afId => {return afId != undefined})).subscribe({
+        next: (deletedFuelResponse) => {
+
+        }
+      });
+    }
+
     this.formData = this.profileForm.value; //обновляем бекап полей без повторной отправки запросов
+    this.airfuels_backup = this.airfuels; //делаем новый бекап значений таблицы
+    this.fuelForm.patchValue({  //обнуляем поля выбора топлива и цены
+      fuel:'',
+      price:''
+    });
     this.isEditing = false;
   }
 
   onCancel(){
     this.profileForm.setValue(this.formData); //возвращаем старые значения полей
     this.isEditing = false;
+    this.airfuels = this.airfuels_backup; //возвращаем начальные значения таблицы
+    this.fuelForm.patchValue({  //обнуляем поля выбора топлива и цены
+      fuel:'',
+      price:''
+    });
     this.setFieldsDisable();  //дизейблим поля
   }
 
@@ -184,13 +236,13 @@ export class AirfieldProfileComponent {
   }
 
   getFuelIdByName(name: string){
-    for(const fuel of this.airfuels){
+    for(const fuel of this.fuels){
       if(fuel.type.includes(name)) return fuel.id;
     }
     return 0;
   }
   getFuelNameById(id: number){
-    for(const fuel of this.airfuels){
+    for(const fuel of this.fuels){
       if(fuel.id == id) return fuel.type;
     }
     return "";

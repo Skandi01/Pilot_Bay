@@ -32,15 +32,23 @@
     <div class="mb-3" [formGroup]="fuelForm">
       <label class="form-label">Типы топлива в наличии</label>
 
-      <select formControlName="type" class="form-select">
-        <option value="" disabled selected>Выберите тип топлива</option>
-        <option *ngFor="let fuel of fuels" [value]="fuel.id">{{ fuel.type }}</option>
-      </select>
+      <div *ngIf="isEditing">
+        <div class="mb-3">
+          <select formControlName="fuel" class="form-select">
+            <option value="" disabled selected>Выберите тип топлива</option>
+            <option *ngFor="let fuel of fuels" [value]="fuel.id">{{ fuel.type }}</option>
+          </select>
+        </div>
 
-      <label for="InputPrice" class="form-label" placeholder="р/л">Цена за литр</label>
-      <input type="text" class="form-control" id="InputPrice" formControlName="price">
-      
-      <button class="btn btn-primary" (click)="addFuel()" [disabled]="fuelForm.invalid">Добавить</button>
+        <div class="mb-3">
+          <label for="InputPrice" class="form-label" placeholder="р/л">Цена за литр</label>
+          <input type="text" class="form-control" id="InputPrice" formControlName="price">
+        </div>
+
+        <div class="mb-3">
+          <button class="btn btn-primary" (click)="addFuel()" [disabled]="fuelForm.invalid">Добавить</button>
+        </div>
+      </div>
 
       <table class="table table-bordered">
         <thead>
@@ -50,12 +58,12 @@
             <th scope="col">Цена</th>
           </tr>
         </thead>
-        <tbody formArrayName="checkboxes">
-          <tr *ngFor="let airfuel of airfuels; let i = index">
+        <tbody>
+          <tr *ngFor="let airfuel of airfuels">
             <th>
-              <button class="btn btn-danger" (click)="deleteFuel(i)">Удалить</button>
+              <button class="btn btn-danger" [disabled]="!isEditing" (click)="deleteFuel(airfuel.fuelId)">Удалить</button>
             </th>
-            <td>{{airfuel.type}}</td>
+            <td>{{getFuelNameById(airfuel.fuelId)}}</td>
             <td>{{airfuel.price}}</td>
           </tr>
         </tbody>
