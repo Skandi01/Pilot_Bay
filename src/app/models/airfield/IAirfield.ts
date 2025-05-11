@@ -9,7 +9,7 @@
 export interface IAirfield{
     id: number;
     userId: number;
-    latitude: String;
-    longitude: String;
-    code: String;
+    latitude: number;
+    longitude: number;
+    code: string;
 }

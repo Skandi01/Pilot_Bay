@@ -8,6 +8,7 @@ import { IAirfield } from '../../models/airfield/IAirfield';
 import { IPlane } from '../../models/pilot/IPlane';
 import { IFuel } from '../../models/airfield/IFuel';
 import { IAirfieldFuelType } from '../../models/airfield/IAirfieldFuelType';
+import { IFlightplan } from '../../models/IFlightplan';
 
 @Injectable({
   providedIn: 'root'
@@ -130,6 +131,18 @@ export class ApiService {
   getAirfield(airfieldId: number): Observable<HttpResponse<IAirfield>> {
     return this.http.get<IAirfield>(
       `${this.apiUrl}/airfield/get/${airfieldId}`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  getAllAirfields(): Observable<HttpResponse<IAirfield[]>> {
+    return this.http.get<IAirfield[]>(
+      `${this.apiUrl}/airfield/getAll`,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
@@ -280,6 +293,18 @@ export class ApiService {
     return this.http.post<HttpStatusCode>(
       `${this.apiUrl}/fuel/deleteAirfuels`,
       airfuelIds,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  getFlightplansByPilotId(pilotId: number): Observable<HttpResponse<IFlightplan[]>>{
+    return this.http.get<IFlightplan[]>(
+      `${this.apiUrl}/flightplan/getByPilotId/${pilotId}`,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'

@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="mb-3">
-          <label for="InputAircraft" class="form-label">Международный код</label>
+          <label for="InputAircraft" class="form-label">Международный код IATA</label>
           <input type="text" class="form-control" id="InputAircraft" formControlName="code">
     
           <div *ngIf="profileForm.get('code')?.invalid && (profileForm.get('code')?.touched || profileForm.get('code')?.dirty)">

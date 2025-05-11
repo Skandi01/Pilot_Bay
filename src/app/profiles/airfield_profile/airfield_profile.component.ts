@@ -32,7 +32,7 @@ export class AirfieldProfileComponent {
   constructor(private dataService: DataService, private apiService: ApiService){
     this.profileForm = new FormGroup({
       latitude: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),    
-      longtitude: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),
+      longitude: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),
       code: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator])
     });
 
@@ -80,7 +80,7 @@ export class AirfieldProfileComponent {
           airfield = airfieldResponse.body;
           this.profileForm.patchValue({
             latitude: (airfield.latitude == null)?'':airfield.latitude,
-            longtitude: (airfield.longitude== null)?'':airfield.longitude,
+            longitude: (airfield.longitude== null)?'':airfield.longitude,
             code: (airfield.code == null)?'':airfield.code
           });
           console.log('Аэродром заполнен запросом');
@@ -164,7 +164,7 @@ export class AirfieldProfileComponent {
       id: this.activeUser.typeId,
       userId: this.activeUser.userId,
       latitude: this.profileForm.get('latitude')?.value,
-      longitude: this.profileForm.get('longtitude')?.value,
+      longitude: this.profileForm.get('longitude')?.value,
       code: this.profileForm.get('code')?.value
     }
 
@@ -222,14 +222,14 @@ export class AirfieldProfileComponent {
 
   setFieldsEnable(){
     this.profileForm.get('latitude')?.enable();
-    this.profileForm.get('longtitude')?.enable();
+    this.profileForm.get('longitude')?.enable();
     this.profileForm.get('code')?.enable();
     this.fuelForm.get('fuel')?.enable();
     this.fuelForm.get('price')?.enable();
   }
   setFieldsDisable(){
     this.profileForm.get('latitude')?.disable();
-    this.profileForm.get('longtitude')?.disable();
+    this.profileForm.get('longitude')?.disable();
     this.profileForm.get('code')?.disable();
     this.fuelForm.get('fuel')?.disable();
     this.fuelForm.get('price')?.disable();

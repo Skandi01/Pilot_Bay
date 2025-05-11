@@ -6,11 +6,18 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
+import { provideYConfig, YConfig } from 'angular-yandex-maps-v3';
+
+const config: YConfig = {
+  apikey: '9aa77e49-4b5d-4f63-83ec-c25f83d2e550',
+};
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes), 
     provideClientHydration(),
     provideHttpClient(withFetch()), provideAnimationsAsync(),
+    provideYConfig(config),
   ]
 };

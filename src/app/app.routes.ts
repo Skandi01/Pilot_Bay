@@ -7,11 +7,12 @@ import { AboutComponent } from './about/about.component';
 import { AuthoriseComponent } from './authorise/authorise.component';
 import { ProfileComponent } from './profiles/profile/profile.component';
 import { GeneralComponent } from './general/general.component';
+import { MarchrouteYMapsComponent } from './marchrouteYMaps/marchrouteYMaps.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/general', pathMatch: 'full' },
     { path: 'general', component: GeneralComponent },
-    { path: 'flight_plan', component: MarchrouteComponent },
+    { path: 'flight_plan', component: MarchrouteYMapsComponent },
     { path: 'forum', component: ForumComponent },
     { path: 'login', component: LoginComponent },
     { path: 'authorise', component: AuthoriseComponent },
