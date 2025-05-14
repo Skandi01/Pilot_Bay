@@ -342,6 +342,18 @@ export class ApiService {
     );
   }
 
+  deleteFlightplan(id: number): Observable<HttpResponse<HttpStatusCode>>{
+    return this.http.get<HttpStatusCode>(
+      `${this.apiUrl}/flightplan/delete/${id}`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
   createRoutes(routes: IFlightplanAirfield[]): Observable<HttpResponse<HttpStatusCode>>{
     return this.http.post<HttpStatusCode>(
       `${this.apiUrl}/flightplan_airfield/createMany`,

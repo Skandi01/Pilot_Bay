@@ -33,7 +33,7 @@ export class MarchrouteYMapsComponent {
   activeUser: ISessionUser;
   map: YMap | undefined;
   map_types: any;
-  selectedPlan: any; // Переменная для хранения выделенного элемента
+  selectedPlan: IMapRoute | undefined; // Переменная для хранения выделенного элемента
 
   constructor(private dataService: DataService, private apiService: ApiService, private modalService: NgbModal){
     this.flightplans = [];
@@ -44,6 +44,7 @@ export class MarchrouteYMapsComponent {
       typeId: -1
     }
     this.currentFlightplan = undefined;
+    this.selectedPlan = undefined;
   }
 
   ngOnInit(){
@@ -93,7 +94,7 @@ export class MarchrouteYMapsComponent {
           this.airfields.forEach(airfield => {
             this.addMarker(airfield.longitude, airfield.latitude, airfield.code, ymaps3);
           })
-          this.addLine([],[]);
+          //this.addLine([],[]);
         }
       }
     });
@@ -145,17 +146,31 @@ export class MarchrouteYMapsComponent {
 
   onDelete(){
     console.log('OnDelete');
-    
+    let flightplanId = this.selectedPlan!.marchroute.flightplan.id;
+    this.apiService.deleteRoutesByFlightplanId(flightplanId).subscribe({
+      next: () => {
+        this.apiService.deleteFlightplan(flightplanId).subscribe({
+          next: () => {
+            this.selectedPlan = undefined;
+            this.deletePreviousPlanLines();
+          }
+        });
+      }
+    });
   }
 
   onEdit(){
     console.log('OnEdit');
+    this.selectedPlan = undefined;
+    this.deletePreviousPlanLines();
     const modalRef = this.modalService.open(FlightplanMdComponent);
     modalRef.componentInstance.data = this.currentFlightplan?.marchroute; // Передаём текущий план в модальное окно
   }
 
   onCreate(){
     console.log('OnEdit');
+    this.selectedPlan = undefined;
+    this.deletePreviousPlanLines();
     const modalRef = this.modalService.open(FlightplanMdComponent);
     modalRef.componentInstance.data = undefined; // Передаём пустой план в модальное окно
   }

@@ -13,6 +13,7 @@ import { IFuel } from '../../models/airfield/IFuel';
 import { IPlane } from '../../models/pilot/IPlane';
 import { IFlightplanAirfield } from '../../models/IFlightplanAirfield';
 import { IFlightplan } from '../../models/IFlightplan';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-flightplan-md',
@@ -33,7 +34,7 @@ export class FlightplanMdComponent {
   plane: IPlane | undefined;
   selectedRow: any;
 
-  constructor(public activeModal: NgbActiveModal, private dataService: DataService, private apiService: ApiService) {
+  constructor(public activeModal: NgbActiveModal, private dataService: DataService, private apiService: ApiService, private router: Router) {
     this.form = new FormGroup({
       name: new FormControl(
         {value: '', disabled: false},
@@ -83,9 +84,12 @@ export class FlightplanMdComponent {
         if(response[2].body != null) this.plane = response[2].body;
 
         if(!(this.data === undefined)){
-          this.data.routes.sort((a,b) => {return a.ordr - b.ordr}).forEach(route => { // добавлена дополнительная сортировка по возрастанию порядка
+          //let sortedRoutes = this.data.routes.sort((a,b) => {return a.ordr - b.ordr});
+          /*this.data.routes.forEach(route => { // добавлена дополнительная сортировка по возрастанию порядка
             this.addRow(route.airfieldId);
-          });
+          });*/
+          let airfieldIds = this.data.routes.map(route => {return route.airfieldId});
+          this.addRowsArr(airfieldIds);
         }
       }
     });
@@ -118,6 +122,7 @@ export class FlightplanMdComponent {
           this.apiService.createRoutes(newRoutes).subscribe({
             next: () => {
               this.activeModal.close();
+              this.router.navigate(['']);
             }
           });
         }
@@ -136,7 +141,7 @@ export class FlightplanMdComponent {
             for(let i = 0; i < this.rows.length; i++){
               newRoutes.push({
                 id: 0,
-                flightplanId: this.data!.flightplan.id,
+                flightplanId: response.body.id,
                 airfieldId: this.rows[i].airfield.id,
                 ordr: i
               });
@@ -144,12 +149,49 @@ export class FlightplanMdComponent {
             this.apiService.createRoutes(newRoutes).subscribe({
               next: () => {
                 this.activeModal.close();
+                this.router.navigate(['']);
               }
             });
           }
         }
       });
     }
+  }
+
+  addRowsArr(airfieldIds: number[]){
+    let airfilds: IAirfield[] = airfieldIds.map(id => {return this.getAirfieldById(id)!});
+    //let fuels: string[] = [];
+
+    let fuelRequests = airfieldIds.map(id => {
+      return this.apiService.getAirfuelsByAirfieldId(id);
+    });
+
+    forkJoin(fuelRequests).subscribe({
+      next: (response) => {
+        for(let i = 0; i < response.length; i++){
+          if(response[i].body != null){
+            let first = true;
+            let airfuels = response[i].body!;
+            let fuelStr = '';
+            airfuels.forEach(airfuel => {
+              if(first) {
+                fuelStr += `${this.getFuelNameById(airfuel.fuelId)}: ${airfuel.price}(р/л)`;
+                first = false;
+              }
+              else fuelStr += `, ${this.getFuelNameById(airfuel.fuelId)}: ${airfuel.price}(р/л)`;
+            })
+            let refuel = (airfuels.findIndex(airfuel => {return airfuel.fuelId == this.plane!.fuelId}) != -1)
+            ? '+' : '';
+
+            this.rows.push({
+              airfield: airfilds[i],
+              fuels: fuelStr,
+              isRefuel: refuel
+            });
+          }
+        }
+      }
+    });
   }
 
   addRow(airfieldId: number){
