@@ -33,7 +33,7 @@ export class AirfieldProfileComponent {
     this.profileForm = new FormGroup({
       latitude: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),    
       longitude: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),
-      code: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator])
+      code: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator,Validators.maxLength(3)])
     });
 
     this.fuelForm = new FormGroup({

@@ -9,6 +9,8 @@ import { IPlane } from '../../models/pilot/IPlane';
 import { IFuel } from '../../models/airfield/IFuel';
 import { IAirfieldFuelType } from '../../models/airfield/IAirfieldFuelType';
 import { IFlightplan } from '../../models/IFlightplan';
+import { IMapMarchroute } from '../../marchrouteYMaps/marchrouteYMaps.component';
+import { IFlightplanAirfield } from '../../models/IFlightplanAirfield';
 
 @Injectable({
   providedIn: 'root'
@@ -302,9 +304,60 @@ export class ApiService {
     );
   }
 
-  getFlightplansByPilotId(pilotId: number): Observable<HttpResponse<IFlightplan[]>>{
-    return this.http.get<IFlightplan[]>(
-      `${this.apiUrl}/flightplan/getByPilotId/${pilotId}`,
+  getFlightplansByPilotId(pilotId: number): Observable<HttpResponse<IMapMarchroute[]>>{
+    return this.http.get<IMapMarchroute[]>(
+      `${this.apiUrl}/flightplan/getByPilotIdWithPoints/${pilotId}`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  createFlightplan(flightplan: IFlightplan): Observable<HttpResponse<IFlightplan>>{
+    return this.http.post<IFlightplan>(
+      `${this.apiUrl}/flightplan/create`,
+      flightplan,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  updateFlightplan(flightplan: IFlightplan): Observable<HttpResponse<IFlightplan>>{
+    return this.http.post<IFlightplan>(
+      `${this.apiUrl}/flightplan/update/${flightplan.id}`,
+      flightplan,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  createRoutes(routes: IFlightplanAirfield[]): Observable<HttpResponse<HttpStatusCode>>{
+    return this.http.post<HttpStatusCode>(
+      `${this.apiUrl}/flightplan_airfield/createMany`,
+      routes,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  deleteRoutesByFlightplanId(flightplanId: number): Observable<HttpResponse<HttpStatusCode>>{
+    return this.http.delete<HttpStatusCode>(
+      `${this.apiUrl}/flightplan_airfield/deleteRoutesByFlightplanId/${flightplanId}`,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'

@@ -4,59 +4,35 @@
       <div class="col-md-2 left-container" style="height: 70vh; overflow-y: auto;">
         <h4 class="text-center">Действия</h4>
         <div class="d-flex flex-column align-items-start mb-3">
-          <button class="btn btn-primary mb-2" (click)="onClick()">Добавить маршрут</button>
-          <button class="btn btn-secondary mb-2" (click)="onClick()">Удалить маршрут</button>
-          <button class="btn btn-success mb-2" (click)="onClick()">Сохранить маршрут</button>
+          <button class="btn btn-primary mb-2" (click)="onCreate()">Добавить маршрут</button>
+          <button class="btn btn-secondary mb-2" (click)="onDelete()" [disabled]="selectedPlan === undefined">Удалить маршрут</button>
+          <button class="btn btn-success mb-2" (click)="onEdit()" [disabled]="selectedPlan === undefined">Изменить маршрут</button>
         </div>
+
         <h5 class="text-center">Маршруты</h5>
         <ul class="list-group">
+          <li class="list-group-item" *ngIf="flightplans.length == 0">Маршруты не заданы</li>
           <li *ngFor="let plan of flightplans" 
           (click)="onRouteClick(plan)" 
+          [class.active]="plan === selectedPlan"
           class="list-group-item"
-          >{{plan.name}}</li>
-          <li class="list-group-item">Маршрут 2</li>
-          <li class="list-group-item">Маршрут 3</li>
-          <li class="list-group-item">Маршрут 4</li>
-          <li class="list-group-item">Маршрут 5</li>
+          >{{plan.marchroute.flightplan.name}}</li>
         </ul>
       </div>
   
       <!-- Правая панель с картой -->
       <div class="col-md-10 right-container" style="height: 70vh;">
         <y-map 
+        style="width: 680px;"
         [props]="{
           location: location,
           theme: 'dark',
         }"
-        (mapReady)="onMapReady($event)"
+        (ready)="onMapReady($event)"
         >
             <y-map-default-scheme-layer />
             <y-map-default-features-layer />
 
-            <y-map-default-marker
-            [props]="{
-              coordinates: [50.226410, 53.290354],
-              title: 'Hello World!',
-              subtitle: 'kind and bright',
-              color: 'blue',
-            }"
-            />
-            <y-map-default-marker
-            [props]="{
-              coordinates: [50.256410, 53.240354],
-              title: 'Hello World 2!',
-              subtitle: 'kind and bright',
-              color: 'blue',
-            }"
-            />
-            <y-map-default-marker *ngFor="let airfield of airfields"
-            [props]="{
-              coordinates: [airfield.longitude, airfield.latitude],
-              title: airfield.code,
-              subtitle: 'kind and bright',
-              color: 'blue',
-            }"
-            />
         </y-map>
       </div>
     </div>

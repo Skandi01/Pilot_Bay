@@ -14,9 +14,9 @@
             <label for="InputPhone" class="form-label">Долгота</label>
             <input type="text" class="form-control" id="InputPhone" formControlName="longtitude">
       
-            <div *ngIf="profileForm.get('longtitude')?.invalid && (profileForm.get('longtitude')?.touched || profileForm.get('longtitude')?.dirty)">
-              <label for="InputPhone" class="form-label text-danger" *ngIf="profileForm.get('longtitude')?.errors?.['required']">Обязательное поле</label>
-              <label for="InputPhone" class="form-label text-danger" *ngIf="profileForm.get('longtitude')?.errors?.['minlength']">Минимум 11 цифр</label>
+            <div *ngIf="profileForm.get('longitude')?.invalid && (profileForm.get('longitude')?.touched || profileForm.get('longitude')?.dirty)">
+              <label for="InputPhone" class="form-label text-danger" *ngIf="profileForm.get('longitude')?.errors?.['required']">Обязательное поле</label>
+              <label for="InputPhone" class="form-label text-danger" *ngIf="profileForm.get('longitude')?.errors?.['minlength']">Минимум 11 цифр</label>
             </div>
         </div>
         <div class="mb-3">
