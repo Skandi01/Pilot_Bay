@@ -33,7 +33,7 @@ export class MarchrouteYMapsComponent {
   activeUser: ISessionUser;
   map: YMap | undefined;
   map_types: any;
-  selectedPlan: IMapRoute | undefined; // Переменная для хранения выделенного элемента
+  selectedPlan: any; // Переменная для хранения выделенного элемента
 
   constructor(private dataService: DataService, private apiService: ApiService, private modalService: NgbModal){
     this.flightplans = [];
@@ -146,11 +146,13 @@ export class MarchrouteYMapsComponent {
 
   onDelete(){
     console.log('OnDelete');
-    let flightplanId = this.selectedPlan!.marchroute.flightplan.id;
+    let flightplanId = this.currentFlightplan!.marchroute.flightplan.id;
     this.apiService.deleteRoutesByFlightplanId(flightplanId).subscribe({
       next: () => {
         this.apiService.deleteFlightplan(flightplanId).subscribe({
           next: () => {
+            let i = this.flightplans.findIndex(plan => {return plan.marchroute.flightplan.id == flightplanId});
+            this.flightplans.splice(i,1); // удаляем маршрут из списка маршрутов
             this.selectedPlan = undefined;
             this.deletePreviousPlanLines();
           }

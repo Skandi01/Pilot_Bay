@@ -1,0 +1,42 @@
+<div class="row" style="height: 70vh; width: 100vh;" [formGroup]="form">
+  <div class="col-3 border-right chat-sidebar">
+    <h5>Маршрут</h5>
+    <select class="mb-5 mt-2" formControlName="airfield" class="form-select" placeholder="Маршрут" id="airfield">
+        <option value="" disabled selected>Выберите маршрут</option>
+        <option *ngFor="let flp of flightplans" [value]="flp.flightplan.id">{{ flp.flightplan.name }}</option>
+    </select>
+    <h5>Контакты</h5>
+    <!--<app-contacts (selectContact)="onContactSelected($event)" [data]="selectedFlightplan"></app-contacts>-->
+    <div class="list-group">
+        <a *ngFor="let contact of contacts" 
+            (click)="onSelect(contact)" 
+            class="list-group-item list-group-item-action"
+            [class.active]="contact === selectedContact"
+            >
+            {{ contact.code }}
+        </a>
+    </div>
+  </div>
+  <div class="col-8 chat-window">
+    <h5 *ngIf="selectedContact">Связь с {{ selectedContact.code }}</h5>
+    <div class="messages" style="height: 80%; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+      <div *ngFor="let message of activeChat?.messages" style="width: 50vh;" [ngClass]="{'text-left': message.isPilotMessage === true, 'text-right': message.isPilotMessage === false}">
+        <div [ngClass]="{'bg-primary text-white': message.isPilotMessage === true, 'bg-light': message.isPilotMessage === false}" class="p-2 rounded mb-1">
+          
+          <div *ngIf="message.isPilotMessage === true">
+            <strong>Вы:</strong> {{ message.text }}
+          </div>
+          <div *ngIf="message.isPilotMessage === false">
+            <strong>{{ selectedContact!.code }}:</strong> {{ message.text }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="input-group mt-2">
+      <input type="text" formControlName="message" class="form-control" placeholder="Введите сообщение..." />
+      <div class="input-group-append">
+        <button [disabled]="(form.get('message')?.value == '')" class="btn btn-primary" (click)="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>

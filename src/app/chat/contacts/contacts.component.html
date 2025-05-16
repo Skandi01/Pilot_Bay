@@ -1,0 +1,7 @@
+<div class="list-group">
+  <a *ngFor="let contact of contacts" 
+     (click)="onSelect(contact)" 
+     class="list-group-item list-group-item-action">
+    {{ contact }}
+  </a>
+</div>

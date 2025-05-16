@@ -43,6 +43,8 @@ export class HeaderComponent {
           if(this.activeUser.userType == '' && this.activeUser.userId == -1){
             this.isLogin = false;
             this.isPilot = false;
+            this.isAirfield = false;
+            this.isAdmin = false;
           }
           else if(this.activeUser.userType == 'pilot'){
             this.isLogin = true;

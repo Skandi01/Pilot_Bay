@@ -12,7 +12,7 @@
         </div>
         <div class="mb-3">
             <label for="InputPhone" class="form-label">Долгота</label>
-            <input type="text" class="form-control" id="InputPhone" formControlName="longtitude">
+            <input type="text" class="form-control" id="InputPhone" formControlName="longitude">
       
             <div *ngIf="profileForm.get('longitude')?.invalid && (profileForm.get('longitude')?.touched || profileForm.get('longitude')?.dirty)">
               <label for="InputPhone" class="form-label text-danger" *ngIf="profileForm.get('longitude')?.errors?.['required']">Обязательное поле</label>

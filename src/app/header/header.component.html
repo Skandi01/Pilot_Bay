@@ -14,7 +14,8 @@
                 <a class="nav-link" routerLink="flight_plan" routerLinkActive="active">Маршрут</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" routerLink="forum" routerLinkActive="active">Связь</a>
+                <a *ngIf="isLogin && isPilot" class="nav-link" routerLink="forum" routerLinkActive="active">Связь</a>
+                <a *ngIf="isLogin && isAirfield" class="nav-link" routerLink="forum_airfield" routerLinkActive="active">Связь</a>
               </li>
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">

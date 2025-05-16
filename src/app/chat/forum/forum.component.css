@@ -1,0 +1,33 @@
+:host {
+  display: block;
+}
+
+::ng-deep .chat-sidebar {
+  border-right: 2px solid #ccc; /* Граница для списка контактов */
+  height: 100%; /* Устанавливаем высоту на 100% */
+}
+
+::ng-deep .chat-window {
+  height: 100%; /* Устанавливаем высоту на 100% */
+  display: flex;
+  flex-direction: column; /* Позволяет использовать flexbox для вертикального выравнивания */
+}
+
+::ng-deep .messages {
+  flex: 1; /* Занимает оставшееся пространство */
+  border: 1px solid #ccc; /* Граница для окна чата */
+  padding: 10px;
+  overflow-y: auto; /* Прокрутка для сообщений */
+}
+
+::ng-deep .input-group {
+  margin-top: auto; /* Перемещает поле ввода вниз */
+}
+
+::ng-deep .text-right {
+  margin-left: auto;
+}
+
+::ng-deep .text-left {
+  margin-right: auto;
+}

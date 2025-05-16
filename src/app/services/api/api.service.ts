@@ -11,6 +11,9 @@ import { IAirfieldFuelType } from '../../models/airfield/IAirfieldFuelType';
 import { IFlightplan } from '../../models/IFlightplan';
 import { IMapMarchroute } from '../../marchrouteYMaps/marchrouteYMaps.component';
 import { IFlightplanAirfield } from '../../models/IFlightplanAirfield';
+import { IChat } from '../../chat/forum/forum.component';
+import { IMessage } from '../../models/IMessage';
+import { IPilotWithPlane } from '../../chat/forum-airfield/forum-airfield.component';
 
 @Injectable({
   providedIn: 'root'
@@ -108,6 +111,18 @@ export class ApiService {
   getPilot(pilotId: number): Observable<HttpResponse<IPilot>> {
     return this.http.get<IPilot>(
       `${this.apiUrl}/pilot/get/${pilotId}`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  getAllPilotsWithPlanes(): Observable<HttpResponse<IPilotWithPlane[]>> {
+    return this.http.get<IPilotWithPlane[]>(
+      `${this.apiUrl}/pilot/getAllWithPlanes`,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
@@ -315,6 +330,7 @@ export class ApiService {
       }
     );
   }
+  
 
   createFlightplan(flightplan: IFlightplan): Observable<HttpResponse<IFlightplan>>{
     return this.http.post<IFlightplan>(
@@ -343,7 +359,7 @@ export class ApiService {
   }
 
   deleteFlightplan(id: number): Observable<HttpResponse<HttpStatusCode>>{
-    return this.http.get<HttpStatusCode>(
+    return this.http.delete<HttpStatusCode>(
       `${this.apiUrl}/flightplan/delete/${id}`,
       {
         headers: new HttpHeaders({
@@ -370,6 +386,69 @@ export class ApiService {
   deleteRoutesByFlightplanId(flightplanId: number): Observable<HttpResponse<HttpStatusCode>>{
     return this.http.delete<HttpStatusCode>(
       `${this.apiUrl}/flightplan_airfield/deleteRoutesByFlightplanId/${flightplanId}`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  getDialogsByPilotId(pilotId: number): Observable<HttpResponse<IChat[]>>{
+    return this.http.get<IChat[]>(
+      `${this.apiUrl}/dialog/getDialogsByPilotId/${pilotId}`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  getDialogsByAirfieldId(airfieldId: number): Observable<HttpResponse<IChat[]>>{
+    return this.http.get<IChat[]>(
+      `${this.apiUrl}/dialog/getDialogsByAirfieldId/${airfieldId}`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  createDialogWithMessage(chat: IChat): Observable<HttpResponse<IChat>>{
+    return this.http.post<IChat>(
+      `${this.apiUrl}/dialog/createDialogWithMessage`,
+      chat,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  sendMessages(messages: IMessage[], dialogId: number): Observable<HttpResponse<HttpStatusCode>>{
+    return this.http.post<HttpStatusCode>(
+      `${this.apiUrl}/dialog/addMessages/${dialogId}`,
+      messages,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  sendMessage(message: IMessage, dialogId: number): Observable<HttpResponse<IMessage>>{
+    return this.http.post<IMessage>(
+      `${this.apiUrl}/dialog/addMessage/${dialogId}`,
+      message,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'

@@ -1,0 +1,43 @@
+<div class="mb-5">
+    <h3>Страница администратора</h3>
+</div>
+<div class="mb-5">
+    <h5>Пользователи-пилоты</h5>
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Логин</th>
+            <th scope="col">ФИО</th>
+            <th scope="col">Самолёт</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user_pilot of user_pilots">
+            <td>{{user_pilot.user.id}}</td>
+            <td>{{user_pilot.user.login}}</td>
+            <td>{{user_pilot.pilot.pilot.name}}</td>
+            <td>{{user_pilot.pilot.plane.model}}</td>
+          </tr>
+        </tbody>
+    </table>
+</div>
+<div class="mb-5">
+    <h5>Пользователи - администрации аэродромов</h5>
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Логин</th>
+            <th scope="col">Код IATA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user_airfield of user_airfields">
+            <td>{{user_airfield.user.id}}</td>
+            <td>{{user_airfield.user.login}}</td>
+            <td>{{user_airfield.airfield.code}}</td>
+          </tr>
+        </tbody>
+    </table>
+</div>
