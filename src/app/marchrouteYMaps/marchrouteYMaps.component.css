@@ -13,6 +13,7 @@
   display: flex; /* Используем flexbox для центрирования текста */
   justify-content: center; /* Центрируем по горизонтали */
   align-items: center; /* Центрируем по вертикали */
+  cursor: pointer;
 }
 
 ::ng-deep .markertext {

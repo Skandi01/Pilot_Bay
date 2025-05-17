@@ -1,5 +1,4 @@
 <form [formGroup]="profileForm" class="p-3">
-
     <div class="mb-3">
         <div class="mb-3">
             <label for="InputFio" class="form-label">Широта</label>
@@ -26,6 +25,10 @@
           <div *ngIf="profileForm.get('code')?.invalid && (profileForm.get('code')?.touched || profileForm.get('code')?.dirty)">
             <label for="InputAircraft" class="form-label text-danger" *ngIf="profileForm.get('code')?.errors?.['required']">Обязательное поле</label>
           </div>
+      </div>
+      <div class="mb-3">
+          <label for="InputAircraft" class="form-label">Описание</label>
+          <input type="text" class="form-control" id="InputAircraft" formControlName="description">
       </div>
     </div>
 
@@ -55,7 +58,7 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">Топливо</th>
-            <th scope="col">Цена</th>
+            <th scope="col">Стоимость</th>
           </tr>
         </thead>
         <tbody>
@@ -65,6 +68,51 @@
             </th>
             <td>{{getFuelNameById(airfuel.fuelId)}}</td>
             <td>{{airfuel.price}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="mb-3" [formGroup]="serveForm">
+      <label class="form-label">Предоставляемые услуги</label>
+
+      <div *ngIf="isEditing">
+        <div class="mb-3">
+          <label for="InputName" class="form-label" placeholder="р/л">Название</label>
+          <input type="text" class="form-control" id="InputName" formControlName="name">
+        </div>
+        <div class="mb-3">
+          <label for="InputDesc" class="form-label" placeholder="р/л">Описание</label>
+          <input type="text" class="form-control" id="InputDesc" formControlName="description">
+        </div>
+        <div class="mb-3">
+          <label for="InputServePrice" class="form-label" placeholder="р/л">Стоимость (руб)</label>
+          <input type="text" class="form-control" id="InputServePrice" formControlName="price">
+        </div>
+
+        <div class="mb-3">
+          <button class="btn btn-primary" (click)="addServe()" [disabled]="serveForm.invalid">Добавить</button>
+        </div>
+      </div>
+
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Название</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Стоимость</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let serve of serves">
+            <th>
+              <button class="btn btn-danger" [disabled]="!isEditing" (click)="deleteServe(serve.name)">Удалить</button>
+            </th>
+            <td>{{serve.name}}</td>
+            <td>{{serve.description}}</td>
+            <td>{{serve.price}}</td>
           </tr>
         </tbody>
       </table>

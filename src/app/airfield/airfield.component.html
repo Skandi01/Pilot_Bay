@@ -1,0 +1,70 @@
+<form [formGroup]="form" class="p-3">
+
+    <div class="mb-3">
+        <div class="mb-3">
+            <label for="InputFio" class="form-label">Широта</label>
+            <input type="text" class="form-control" id="InputFio" formControlName="latitude">
+        </div>
+        <div class="mb-3">
+            <label for="InputPhone" class="form-label">Долгота</label>
+            <input type="text" class="form-control" id="InputPhone" formControlName="longitude">
+        </div>
+        <div class="mb-3">
+          <label for="InputAircraft" class="form-label">Международный код IATA</label>
+          <input type="text" class="form-control" id="InputAircraft" formControlName="code">
+      </div>
+      <div class="mb-3">
+          <label for="InputAircraft" class="form-label">Описание</label>
+          <input type="text" class="form-control" id="InputAircraft" formControlName="description">
+      </div>
+      <div class="mb-3" *ngIf="isAdmin">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" formControlName="showOnCard">
+        <label class="form-check-label" for="flexCheckDefault">
+            Отображать на карте
+        </label>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Типы топлива в наличии</label>
+
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">Топливо</th>
+            <th scope="col">Стоимость</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let airfuel of airfuels">
+            <td>{{getFuelNameById(airfuel.fuelId)}}</td>
+            <td>{{airfuel.price}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Предоставляемые услуги</label>
+
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">Название</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Стоимость</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let serve of serves">
+            <td>{{serve.name}}</td>
+            <td>{{serve.description}}</td>
+            <td>{{serve.price}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    
+</form>

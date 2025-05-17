@@ -10,11 +10,14 @@ import { GeneralComponent } from './general/general.component';
 import { MarchrouteYMapsComponent } from './marchrouteYMaps/marchrouteYMaps.component';
 import { ForumAirfieldComponent } from './chat/forum-airfield/forum-airfield.component';
 import { AdministrationComponent } from './administration/administration.component';
+import { AirfieldComponent } from './airfield/airfield.component';
+import { AirfieldMdComponent } from './modals/airfield_md/airfield_md.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/general', pathMatch: 'full' },
     { path: 'general', component: GeneralComponent },
     { path: 'flight_plan', component: MarchrouteYMapsComponent },
+    { path: 'flight_plan_admin', component: MarchrouteComponent },
     { path: 'forum', component: ForumComponent },
     { path: 'forum_airfield', component: ForumAirfieldComponent },
     { path: 'login', component: LoginComponent },
@@ -22,4 +25,5 @@ export const routes: Routes = [
     { path: 'profile', component: ProfileComponent },
     { path: 'administration', component: AdministrationComponent },
     { path: 'about', component: AboutComponent },
+    { path: 'foo', component: AirfieldMdComponent }
 ];

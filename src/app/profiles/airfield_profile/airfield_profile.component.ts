@@ -8,6 +8,7 @@ import { forkJoin } from 'rxjs';
 import { IFuel } from '../../models/airfield/IFuel';
 import { IAirfield } from '../../models/airfield/IAirfield';
 import { IAirfieldFuelType } from '../../models/airfield/IAirfieldFuelType';
+import { IServe } from '../../models/IServe';
 
 @Component({
   selector: 'app-airfield-profile',
@@ -19,6 +20,7 @@ import { IAirfieldFuelType } from '../../models/airfield/IAirfieldFuelType';
 export class AirfieldProfileComponent { 
   profileForm: FormGroup;
   fuelForm: FormGroup;
+  serveForm: FormGroup;
   formData: FormData;
 
   isEditing: boolean;
@@ -27,17 +29,28 @@ export class AirfieldProfileComponent {
   airfuels: IAirfieldFuelType[];
   airfuels_backup: IAirfieldFuelType[];
   airfuelIds_deleted: number[];
+  serves: IServe[];
+  serves_backup: IServe[];
+  serveIds_deleted: number[];
   fuels: IFuel[];
 
   constructor(private dataService: DataService, private apiService: ApiService){
     this.profileForm = new FormGroup({
       latitude: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),    
       longitude: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),
-      code: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator,Validators.maxLength(3)])
+      code: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator,Validators.maxLength(3)]),
+      description: new FormControl({value: '', disabled: true}),
+      showOnCard: new FormControl({value: '', disabled: true})
     });
 
     this.fuelForm = new FormGroup({
       fuel: new FormControl({value: '', disabled: true}, [Validators.required,Validators.nullValidator]),
+      price: new FormControl({value: '', disabled: true}, [Validators.required,Validators.nullValidator,Validators.min(0)])
+    });
+
+    this.serveForm = new FormGroup({
+      name: new FormControl({value: '', disabled: true}, [Validators.required,Validators.nullValidator]),
+      description: new FormControl({value: '', disabled: true}, [Validators.required,Validators.nullValidator]),
       price: new FormControl({value: '', disabled: true}, [Validators.required,Validators.nullValidator,Validators.min(0)])
     });
 
@@ -52,6 +65,10 @@ export class AirfieldProfileComponent {
     this.airfuels_backup = [];
     this.airfuelIds_deleted = [];
     this.fuels = [];
+
+    this.serves = [];
+    this.serves_backup = [];
+    this.serveIds_deleted = [];
 
     this.formData = this.profileForm.value; //инициализация
   }
@@ -81,7 +98,9 @@ export class AirfieldProfileComponent {
           this.profileForm.patchValue({
             latitude: (airfield.latitude == null)?'':airfield.latitude,
             longitude: (airfield.longitude== null)?'':airfield.longitude,
-            code: (airfield.code == null)?'':airfield.code
+            code: (airfield.code == null)?'':airfield.code,
+            description: airfield.description,
+            showOnCard: airfield.showOnCard
           });
           console.log('Аэродром заполнен запросом');
           console.log(this.profileForm.value);
@@ -101,6 +120,14 @@ export class AirfieldProfileComponent {
               price: new FormControl({value: airfuel.price, disabled: true},[Validators.required,Validators.nullValidator])
             }));
           })*/
+        }
+      }
+    });
+
+    this.apiService.getServesByAirfield(this.activeUser.typeId).subscribe({
+      next: (response) => {
+        if(response.body != null){
+          this.serves = response.body; //заполняем таблицу услугами, связанными с аэродромом
         }
       }
     });
@@ -144,11 +171,41 @@ export class AirfieldProfileComponent {
     console.log('deleteFuel: airfuelIds_deleted: ',this.airfuelIds_deleted);
   }
 
+  addServe(){
+    let serve: string = this.serveForm.get('name')?.value;
+    if(this.serves.filter(srv => {return srv.name === serve}).length == 0){
+      this.serves.push({
+        id: undefined,
+        airfieldId: this.activeUser.typeId,
+        name: serve,
+        description: this.serveForm.get('description')?.value,
+        price: this.serveForm.get('price')?.value
+      });
+      this.serveForm.patchValue({  //обнуляем поля выбора топлива и цены
+        name:'',
+        description:'',
+        price: ''
+      });
+    }
+    else{
+
+    }
+  }
+
+  deleteServe(name: string){
+    let srvId = this.serves.findIndex(srv => {return srv.name === name});
+    this.serveIds_deleted.push(
+      this.serves[srvId].id!
+    );
+    this.serves.splice(srvId,1);
+  }
+
   onSubmit(){
     this.isEditing = true;
     this.setFieldsEnable(); //делаем поля активными
     console.log(this.profileForm.value);
     this.airfuels_backup = this.airfuels; //делаем бекап значений таблицы
+    this.serves_backup = this.serves;
   }
 
   onSave(){
@@ -165,7 +222,9 @@ export class AirfieldProfileComponent {
       userId: this.activeUser.userId,
       latitude: this.profileForm.get('latitude')?.value,
       longitude: this.profileForm.get('longitude')?.value,
-      code: this.profileForm.get('code')?.value
+      code: this.profileForm.get('code')?.value,
+      description: this.profileForm.get('description')?.value,
+      showOnCard: this.profileForm.get('showOnCard')?.value
     }
 
     console.log('Save: airfield:',airfield);
@@ -189,11 +248,25 @@ export class AirfieldProfileComponent {
         }
       }); 
     }
-
-    console.log('Save: airfuelIds_deleted:',this.airfuelIds_deleted);
-
     if(this.airfuelIds_deleted.length > 0){ //удаляем удалённые из таблицы типы топлива
       this.apiService.deleteAirfuels(this.airfuelIds_deleted.filter(afId => {return afId != undefined})).subscribe({
+        next: (deletedFuelResponse) => {
+
+        }
+      });
+    }
+
+    let newServes: IServe[] = this.serves.filter(srv => {return srv.id == undefined}); //отделяем добавленные типы топлива
+
+    if(newServes.length > 0) {  //отправляем запрос на обновление типов топлива в наличии
+      this.apiService.createServes(newServes).subscribe({
+        next: (response) => {
+
+        }
+      }); 
+    }
+    if(this.serveIds_deleted.length > 0){ //удаляем удалённые из таблицы типы топлива
+      this.apiService.deleteServes(this.serveIds_deleted.filter(srvId => {return srvId != undefined})).subscribe({
         next: (deletedFuelResponse) => {
 
         }
@@ -224,15 +297,23 @@ export class AirfieldProfileComponent {
     this.profileForm.get('latitude')?.enable();
     this.profileForm.get('longitude')?.enable();
     this.profileForm.get('code')?.enable();
+    this.profileForm.get('description')?.enable();
     this.fuelForm.get('fuel')?.enable();
     this.fuelForm.get('price')?.enable();
+    this.serveForm.get('name')?.enable();
+    this.serveForm.get('description')?.enable();
+    this.serveForm.get('price')?.enable();
   }
   setFieldsDisable(){
     this.profileForm.get('latitude')?.disable();
     this.profileForm.get('longitude')?.disable();
     this.profileForm.get('code')?.disable();
+    this.profileForm.get('description')?.disable();
     this.fuelForm.get('fuel')?.disable();
     this.fuelForm.get('price')?.disable();
+    this.serveForm.get('name')?.disable();
+    this.serveForm.get('description')?.disable();
+    this.serveForm.get('price')?.disable();
   }
 
   getFuelIdByName(name: string){

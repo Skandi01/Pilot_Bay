@@ -12,4 +12,6 @@ export interface IAirfield{
     latitude: number;
     longitude: number;
     code: string;
+    description: string;
+    showOnCard: boolean;
 }

@@ -10,6 +10,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { IFlightplanAirfield } from '../models/IFlightplanAirfield';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FlightplanMdComponent } from '../modals/flightplan_md/flightplan_md.component';
+import { AirfieldMdComponent } from '../modals/airfield_md/airfield_md.component';
 
 @Component({
   selector: 'app-marchroute-ymaps',
@@ -92,7 +93,8 @@ export class MarchrouteYMapsComponent {
           console.log('airfieds:',this.airfields); 
 
           this.airfields.forEach(airfield => {
-            this.addMarker(airfield.longitude, airfield.latitude, airfield.code, ymaps3);
+            if(airfield.showOnCard)
+              this.addMarker(airfield, ymaps3);
           })
           //this.addLine([],[]);
         }
@@ -104,13 +106,26 @@ export class MarchrouteYMapsComponent {
     //this.addMarker(50.473659, 53.260894, 'Мой маркер',ymaps3); // Пример добавления маркера
   }
 
-  addMarker(lng:number,lat:number, hint: string, ymaps:any) {
+  onAirfieldClick(event: MouseEvent){
+    const target = event.currentTarget as HTMLParagraphElement;
+    const id = target.getAttribute('data-value');
+    console.log('Нажат аэродром с id:', id);
+    const modalRef = this.modalService.open(AirfieldMdComponent);
+    modalRef.componentInstance.data = this.getAirfieldById(Number(id)); // Передаём аэродром в модальное окно
+  }
+
+  addMarker(airfield: IAirfield, ymaps:any) {
+    let lng = airfield.longitude;
+    let lat = airfield.latitude;
+    let hint = airfield.code;
     let content = document.createElement('div');
     content.classList.add('rectangle');
     let text = document.createElement('p');
     text.textContent = hint;
     text.classList.add('markertext');
     text.id = 'markertextid';
+    text.setAttribute('data-value', airfield.id.toString());
+    text.addEventListener('click', this.onAirfieldClick.bind(this));
     content.appendChild(text);
     //content.style = "background-color: #333; border-radius: 15px; width: 60px; height: 30px; display: flex; align-items: center; justify-content: center;";
     //content.innerHTML = `<p style="color: white; font-size: 20px; margin: 0;>KUF</p>`;
@@ -175,6 +190,7 @@ export class MarchrouteYMapsComponent {
     this.deletePreviousPlanLines();
     const modalRef = this.modalService.open(FlightplanMdComponent);
     modalRef.componentInstance.data = undefined; // Передаём пустой план в модальное окно
+
   }
 
   onRouteClick(plan: IMapRoute) {

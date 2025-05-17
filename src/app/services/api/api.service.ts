@@ -14,6 +14,7 @@ import { IFlightplanAirfield } from '../../models/IFlightplanAirfield';
 import { IChat } from '../../chat/forum/forum.component';
 import { IMessage } from '../../models/IMessage';
 import { IPilotWithPlane } from '../../chat/forum-airfield/forum-airfield.component';
+import { IServe } from '../../models/IServe';
 
 @Injectable({
   providedIn: 'root'
@@ -449,6 +450,44 @@ export class ApiService {
     return this.http.post<IMessage>(
       `${this.apiUrl}/dialog/addMessage/${dialogId}`,
       message,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  getServesByAirfield(airfieldId: number): Observable<HttpResponse<IServe[]>>{
+    return this.http.get<IServe[]>(
+      `${this.apiUrl}/serve/getAllByAirfield/${airfieldId}`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  createServes(serves: IServe[]): Observable<HttpResponse<IServe[]>>{
+    return this.http.post<IServe[]>(
+      `${this.apiUrl}/serve/createMany`,
+      serves,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }
+    );
+  }
+
+  deleteServes(serveIds: number[]): Observable<HttpResponse<HttpStatusCode>>{
+    return this.http.post<HttpStatusCode>(
+      `${this.apiUrl}/serve/deleteServes`,
+      serveIds,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'

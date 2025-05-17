@@ -94,7 +94,7 @@ export class FlightplanMdComponent {
       }
     });
 
-
+    this.airfields = this.airfields.filter(airfield => airfield.showOnCard == true);  //отображаются только те аэродромы, которые отображаются на карте
   }
 
   save() {

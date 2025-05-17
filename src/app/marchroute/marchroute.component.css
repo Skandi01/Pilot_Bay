@@ -2,3 +2,26 @@
   display: block;
 }
 
+::ng-deep .rectangle {
+  width: 35px; /* Ширина прямоугольника */
+  height: 30px; /* Высота прямоугольника */
+  background-color: #333; /* Тёмный цвет фона */
+  border-top-left-radius: 0; /* Прямой верхний левый угол */
+  border-top-right-radius: 10px; /* Скруглённый верхний правый угол */
+  border-bottom-right-radius: 10px; /* Скруглённый нижний правый угол */
+  border-bottom-left-radius: 10px; /* Скруглённый нижний левый угол */
+  display: flex; /* Используем flexbox для центрирования текста */
+  justify-content: center; /* Центрируем по горизонтали */
+  align-items: center; /* Центрируем по вертикали */
+  cursor: pointer;
+}
+
+::ng-deep .markertext {
+  color: white; /* Цвет текста */
+  margin: 0; /* Убираем отступы у параграфа */
+  font-size: 16px; /* Размер текста */
+}
+
+::ng-deep #markertextid p {
+  margin-bottom: 0; /* Убираем отступы у параграфа */
+}

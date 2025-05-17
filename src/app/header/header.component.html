@@ -10,8 +10,11 @@
               <li class="nav-item">
                 <a class="nav-link" routerLink="general" routerLinkActive="active">Главная</a>
               </li>
-              <li class="nav-item" *ngIf="isPilot">
+              <li class="nav-item" *ngIf="isLogin && isPilot">
                 <a class="nav-link" routerLink="flight_plan" routerLinkActive="active">Маршрут</a>
+              </li>
+              <li class="nav-item" *ngIf="isLogin && isAdmin">
+                <a class="nav-link" routerLink="flight_plan_admin" routerLinkActive="active">Карта</a>
               </li>
               <li class="nav-item">
                 <a *ngIf="isLogin && isPilot" class="nav-link" routerLink="forum" routerLinkActive="active">Связь</a>

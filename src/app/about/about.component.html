@@ -2,27 +2,49 @@
     <h1 class="text-center">Справка о системе</h1>
     <div class="card">
       <div class="card-header">
-        <h2>Общая информация</h2>
+        <h2>Предназначение системы</h2>
       </div>
       <div class="card-body">
-        <p>Это приложение разработано с использованием Angular 18 и Bootstrap для создания отзывчивого интерфейса.</p>
-        <p>Вы можете использовать это приложение для управления данными и получения информации о системе.</p>
+        <p>Данная система разработана для оказания услуг малой авиации.</p>
+        <p>Эта страница предоставляет полную справочную информацию о системе.</p>
       </div>
     </div>
   
     <div class="mt-4">
-      <h2>Функции</h2>
+      <h2>Функции администратора системы</h2>
       <ul class="list-group">
-        <li class="list-group-item">Управление пользователями</li>
-        <li class="list-group-item">Отчеты и аналитика</li>
-        <li class="list-group-item">Настройки системы</li>
+        <li class="list-group-item">Авторизация пользователя в системе (ввод логина/пароля);</li>
+        <li class="list-group-item">Просмотр списка зарегистрированных пользователей</li>
+        <li class="list-group-item">Просмотр интерактивной карты</li>
+        <li class="list-group-item">Просмотр справочной информации</li>
+      </ul>
+    </div>
+
+    <div class="mt-4">
+      <h2>Функции пилота</h2>
+      <ul class="list-group">
+        <li class="list-group-item">Авторизация пользователя в системе (ввод логина/пароля);</li>
+        <li class="list-group-item">Просмотр интерактивной карты</li>
+        <li class="list-group-item">Прокладывание маршрута полёта с учётом возможности дозаправки необходимым типом топлива</li>
+        <li class="list-group-item">Ведение переписки с аэродромами, входящими в маршруты, созданные пользователем</li>
+        <li class="list-group-item">Редактирование личного профиля</li>
+        <li class="list-group-item">Просмотр справочной информации</li>
+      </ul>
+    </div>
+
+    <div class="mt-4">
+      <h2>Функции администратора аэродрома</h2>
+      <ul class="list-group">
+        <li class="list-group-item">Авторизация пользователя в системе (ввод логина/пароля);</li>
+        <li class="list-group-item">Ведение переписки с пилотами</li>
+        <li class="list-group-item">Редактирование личного профиля</li>
+        <li class="list-group-item">Просмотр справочной информации</li>
       </ul>
     </div>
   
     <div class="mt-4">
-      <h2>Контакты</h2>
-      <p>Если у вас есть вопросы, пожалуйста, свяжитесь с нашей службой поддержки:</p>
-      <p>Email: support.com</p>
+      <h2>Систему разработал</h2>
+      <p>Учащийся Титов И.А.</p>
     </div>
     <button type="button" class="btn btn-outline-secondary" (click)="onClick()">На главную</button>
 </div>
