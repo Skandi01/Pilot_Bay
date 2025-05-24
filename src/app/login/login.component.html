@@ -1,3 +1,4 @@
+<h4 class="text-center mb-5">Авторизация</h4>
 <form [formGroup]="loginForm"  (ngSubmit)="onSubmit(loginForm)">
     <div class="mb-3">
       <label for="InputLogin" class="form-label">Псевдоним</label>
@@ -6,7 +7,7 @@
       <div *ngIf="loginForm.get('login')?.invalid && (loginForm.get('login')?.touched || loginForm.get('login')?.dirty)">
         <label for="InputLogin" class="form-label text-danger" *ngIf="loginForm.get('login')?.errors?.['required']">Обязательное поле</label>
       </div>
-      <div class="text-danger" *ngIf="loginError">Логин не уникальный</div>
+      
     </div>
     <div class="mb-3">
       <label for="InputPassword" class="form-label">Пароль</label>
@@ -15,7 +16,9 @@
       <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)">
         <label for="InputPassword" class="form-label text-danger" *ngIf="loginForm.get('password')?.errors?.['required']">Обязательное поле</label>
       </div>
+      <div class="text-danger" *ngIf="loginError">Не верный логин или пароль</div>
     </div>
+    
     <button type="submit" class="btn btn-primary me-3" [disabled]="loginForm.invalid">Войти</button>
-    <a class="btn btn-primary ms-3" href="authorise">Зарегистрироваться</a>
+    <a class="btn btn-primary ms-3" href="authorise">Регистрация</a>
 </form>

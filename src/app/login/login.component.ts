@@ -53,6 +53,9 @@ export class LoginComponent {
         }
 
         
+      },
+      error: () => {
+        this.loginError = true;
       }
     }
     );

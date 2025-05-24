@@ -1,13 +1,15 @@
+<h4 class="text-center mb-5">Регистрация</h4>
 <form [formGroup]="authForm" (ngSubmit)="onSubmit(authForm)" class="p-3">
     <div class="mb-3">
-      <label for="InputLogin" class="form-label">Никнейм</label>
+      <label for="InputLogin" class="form-label">Псевдоним</label>
       <input type="text" class="form-control" id="InputLogin" formControlName="login">
 
       <div *ngIf="authForm.get('login')?.invalid && (authForm.get('login')?.touched || authForm.get('login')?.dirty)">
         <label for="InputLogin" class="form-label text-danger" *ngIf="authForm.get('login')?.errors?.['required']">Обязательное поле</label>
-        <label for="InputLogin" class="form-label text-danger" *ngIf="authForm.get('login')?.errors?.['minlength']">Минимум 3 символа</label>
+        <label for="InputLogin" class="form-label text-danger" *ngIf="authForm.get('login')?.errors?.['minlength']">Минимум 4 символа</label>
+        <label for="InputLogin" class="form-label text-danger" *ngIf="authForm.get('login')?.errors?.['maxlength']">Максимум 10 символов</label>
       </div>
-      <div class="text-danger" *ngIf="loginError">Логин не уникальный</div>
+      <div class="text-danger" *ngIf="loginError">Псевдоним не уникальный</div>
     </div>
     <div class="mb-3">
       <label for="InputPassword" class="form-label">Пароль</label>
@@ -15,9 +17,11 @@
 
       <div *ngIf="authForm.get('password')?.invalid && (authForm.get('password')?.touched || authForm.get('password')?.dirty)">
         <label for="InputPassword" class="form-label text-danger" *ngIf="authForm.get('password')?.errors?.['required']">Обязательное поле</label>
-        <label for="InputPassword" class="form-label text-danger" *ngIf="authForm.get('password')?.errors?.['minlength']">Минимум 5 символов</label>
+        <label for="InputPassword" class="form-label text-danger" *ngIf="authForm.get('password')?.errors?.['minlength']">Минимум 4 символа</label>
+        <label for="InputPassword" class="form-label text-danger" *ngIf="authForm.get('password')?.errors?.['maxlength']">Максимум 10 символов</label>
       </div>
     </div>
+    <p class="form-label">Тип учётной записи</p>
     <div class="btn-group mb-3" role="group" aria-label="Radio toggle button group">
 
         <input value="option1" type="radio" class="btn-check" id="vbtn-radio1" autocomplete="off" formControlName="userType">

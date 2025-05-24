@@ -24,8 +24,8 @@ export class AuthoriseComponent {
   
   constructor(private apiService: ApiService, private storageService: StorageService, private router: Router, private dataService: DataService){
     this.authForm = new FormGroup({
-      login: new FormControl('',[Validators.required,Validators.nullValidator,Validators.minLength(3)]),    
-      password: new FormControl('',[Validators.required,Validators.nullValidator,Validators.minLength(5)]),
+      login: new FormControl('',[Validators.required,Validators.nullValidator,Validators.minLength(4),Validators.maxLength(10)]),    
+      password: new FormControl('',[Validators.required,Validators.nullValidator,Validators.minLength(4),Validators.maxLength(10)]),
       userType: new FormControl('option1')
     });
     this.loginError = false;

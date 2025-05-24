@@ -67,7 +67,7 @@
               <button class="btn btn-danger" [disabled]="!isEditing" (click)="deleteFuel(airfuel.fuelId)">Удалить</button>
             </th>
             <td>{{getFuelNameById(airfuel.fuelId)}}</td>
-            <td>{{airfuel.price}}</td>
+            <td>{{airfuel.price}} р/л</td>
           </tr>
         </tbody>
       </table>
@@ -112,7 +112,7 @@
             </th>
             <td>{{serve.name}}</td>
             <td>{{serve.description}}</td>
-            <td>{{serve.price}}</td>
+            <td>{{serve.price}} р.</td>
           </tr>
         </tbody>
       </table>

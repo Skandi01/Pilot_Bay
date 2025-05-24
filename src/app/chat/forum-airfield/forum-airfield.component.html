@@ -31,7 +31,7 @@
     <div class="input-group mt-2">
       <input type="text" formControlName="message" class="form-control" placeholder="Введите сообщение..." />
       <div class="input-group-append">
-        <button [disabled]="(form.get('message')?.value == '')" class="btn btn-primary" (click)="sendMessage()">Send</button>
+        <button [disabled]="(form.get('message')?.value == '')" class="btn btn-primary" (click)="sendMessage()">Отправить</button>
       </div>
     </div>
   </div>

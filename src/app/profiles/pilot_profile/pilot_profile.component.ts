@@ -36,7 +36,7 @@ export class PilotProfileComponent {
         phone: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator,Validators.minLength(11)/*Validators.pattern('\d{11}')*/]),
         aircraft: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),
         fuelType: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator]),
-        consumption: new FormControl({value: '', disabled: true},[Validators.required,Validators.nullValidator])
+        consumption: new FormControl({value: '', disabled: true})
       });
   
       this.isEditing = false;
