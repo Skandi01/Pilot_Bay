@@ -16,7 +16,7 @@
       <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)">
         <label for="InputPassword" class="form-label text-danger" *ngIf="loginForm.get('password')?.errors?.['required']">Обязательное поле</label>
       </div>
-      <div class="text-danger" *ngIf="loginError">Не верный логин или пароль</div>
+      <div class="text-danger" *ngIf="loginError">Неверный логин или пароль</div>
     </div>
     
     <button type="submit" class="btn btn-primary me-3" [disabled]="loginForm.invalid">Войти</button>
