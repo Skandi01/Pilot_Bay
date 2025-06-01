@@ -1,3 +1,24 @@
 :host {
   display: block;
 }
+
+::ng-deep .card-text{
+  border-top: 1px solid black; 
+}
+
+::ng-deep p{
+  margin-top: 1rem;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+::ng-deep .card-fit{
+  margin-bottom: 1rem;
+  width: fit-content;
+}
+
+::ng-deep .responsive-image {
+  height: auto; /* Автоматически сохраняем пропорции изображения */
+  margin-left: auto;
+  margin-right: auto;
+}
